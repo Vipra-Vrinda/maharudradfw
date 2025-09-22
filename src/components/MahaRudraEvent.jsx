@@ -8,14 +8,13 @@ import { motion } from "framer-motion";
 // Usage: drop into a React app, ensure Tailwind is configured.
 
 export default function MahaRudraEvent({
-  title = "Mahā Rudra Kṣetra — MahaRudra",
-  date = "December 12, 2025",
-  startTime = "6:00 PM",
-  endTime = "9:30 PM",
-  venue = "Sri Sai Temple, Main Hall",
-  heroImage = "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1600&q=80",
+  title = "Mahā Rudra DFW",
+  date = "October 10, 2025",
+  endDate = "October 11, 2025",
+  startTime = "11:30 AM",
+  venue = "DFW Hindu Temple, Cultural Hall",
+  heroImage = "https://yogaeastwest.com/wp-content/uploads/2024/10/pexels-rajjatbayas-5935662-scaled.jpg.webp",
   youtubeChannelId = "YOUR_CHANNEL_ID",
-  donationUrl = "https://www.payments.example/donate",
 }) {
   const eventDate = new Date(date + " " + startTime);
 
@@ -39,16 +38,31 @@ export default function MahaRudraEvent({
 
   // Sample schedule and performers — edit as needed
   const schedule = [
-    { time: "6:00 PM", title: "Prārthanā & Śodhana" },
-    { time: "6:30 PM", title: "Rudra Abhishekam — Part I" },
-    { time: "7:15 PM", title: "Mahā Rudra Chanting" },
-    { time: "8:00 PM", title: "Rudra Abhishekam — Part II" },
-    { time: "8:45 PM", title: "Bhajans & Aarti" },
+    { time: "Day 1 " + startTime, title: "Inauguration and Ganesh Pooje" },
+    { time: "Day 1 11:40 AM - 12:20 PM", title: "Punyaha and Pancha Gavya" },
+    { time: "Day 1 12:20 PM - 12:30 PM", title: "Raksha Bandana" },
+    { time: "Day 1 12:30 PM - 12:40 PM", title: "Go Pooje" },
+    { time: "Day 1 12:40 PM - 12:50 PM", title: "Ruthwik Varuna" },
+    { time: "Day 1 12:50 PM - 1:50 PM", title: "Kalasha Staphane" },
+    { time: "Day 1 12:50 PM - 2:30 PM", title: "Mahanyasa Parayana" },
+    { time: "Day 1 2:00 PM - 2:30 PM", title: "Volunteer Lunch" },
+    { time: "Day 1 2:40 PM - 3:00 PM", title: "Rudra Parayana Kartha Vasthra Samarpane" },
+    { time: "Day 1 3:00 PM - 3:10 PM", title: "Guru Vandana" },
+    { time: "Day 1 3:10 PM - 3:20 PM", title: "Maha Sankalpa" },
+    { time: "Day 1 3:30 PM - 6:00 PM", title: "Rudra Parayana Ekadasha I" },
+    { time: "Day 1 6:00 PM - 6:15 PM", title: "Break" },
+    { time: "Day 1 6:15 PM - 8:45 PM", title: "Rudra Parayana Ekadasha II & Abhisheka" },
+    { time: "Day 1 8:45 PM - 9:30 PM", title: "Maha Mangalarathi" },
+    { time: "Day 1 9:30 PM - 10:00 PM", title: "Palahaara - Ruthwik Bhojana" },
   ];
 
-  const speakers = [
-    { name: "Pujya Shri Ananda", role: "Lead Priest" },
-    { name: "Dr. Lalita Sharma", role: "Veda Scholar" },
+  const priests = [
+    { name: "Shri Ravi Vardhan", role: "Priest of Iyengar tradition" },
+    { name: "Subramanya Kashyap", role: "Founder of MahaRudra Religious Committee" },
+    { name: "Nikhil Kashyap", role: "Member of MahaRudra Religious Committee" },
+    { name: "Ravi Balasubramanya", role: "Member of MahaRudra Religious Committee" },
+    { name: "Shailendra Upadhye", role: "Member of MahaRudra Religious Committee" },
+    { name: "Aaditya Murthy", role: "Member of MahaRudra Religious Committee" },
   ];
 
   return (
@@ -59,15 +73,14 @@ export default function MahaRudraEvent({
             <img src="/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
-              <p className="text-sm text-slate-600">{date} • {venue}</p>
+              <p className="text-sm text-slate-600">{date} - {endDate} • {venue}</p>
             </div>
           </div>
           <nav className="flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
-            <a href="#register" className="text-sm hover:underline">RSVP</a>
-            <a href={donationUrl} className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">Donate</a>
+            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Rudra Count</a>
           </nav>
         </div>
       </header>
@@ -82,12 +95,12 @@ export default function MahaRudraEvent({
 
             <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-bold">{title}</h2>
-              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony. All are welcome — bring family and friends. We will have guided chanting, abhishekam, and devotional music.</p>
+              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony with family and friends. There will be a group of fifty Kannada Vedic Chanters trained and led by Subramanya Kashyap, along with several priests and Vedic scholars of various traditions leading the processions.</p>
 
               <div className="mt-4 flex flex-wrap gap-3">
                 <div className="flex items-center gap-3">
                   <strong className="text-sm">When:</strong>
-                  <span className="text-sm text-slate-600">{date} • {startTime} — {endTime}</span>
+                  <span className="text-sm text-slate-600">{date} - {endDate}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <strong className="text-sm">Where:</strong>
@@ -114,11 +127,6 @@ export default function MahaRudraEvent({
                   <div className="text-xs text-slate-500">Seconds</div>
                 </div>
               </div>
-
-              <div className="mt-6 flex gap-3">
-                <a href="#register" className="rounded-lg bg-amber-600 text-white px-5 py-2 font-medium">RSVP</a>
-                <a href={donationUrl} className="rounded-lg border border-amber-600 text-amber-600 px-5 py-2 font-medium">Donate</a>
-              </div>
             </div>
           </div>
 
@@ -127,16 +135,15 @@ export default function MahaRudraEvent({
             <div className="rounded-lg bg-white p-4 shadow-sm">
               <h3 className="font-semibold">Quick Info</h3>
               <ul className="mt-2 text-sm text-slate-600 space-y-1">
-                <li><strong>Doors:</strong> 5:30 PM</li>
-                <li><strong>Registration:</strong> Walk-ins welcome</li>
-                <li><strong>Contact:</strong> events@temple.org</li>
+                <li><strong>Ganesh Puja:</strong> 11:30 AM</li>
+                <li><strong>Contact:</strong> vipravrindadallas@gmail.com </li>
               </ul>
             </div>
 
             <div className="rounded-lg bg-white p-4 shadow-sm">
-              <h3 className="font-semibold">Speakers & Priests</h3>
+              <h3 className="font-semibold">Priests & Volunteers</h3>
               <ul className="mt-2 text-sm text-slate-600 space-y-2">
-                {speakers.map((s) => (
+                {priests.map((s) => (
                   <li key={s.name} className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-semibold">{s.name.split(" ")[0][0]}</div>
                     <div>
@@ -183,38 +190,6 @@ export default function MahaRudraEvent({
                 allowFullScreen
                 className="w-full h-96 rounded"
               ></iframe>
-            </div>
-          </div>
-        </section>
-
-        {/* Register / RSVP */}
-        <section id="register" className="mt-12">
-          <h2 className="text-xl font-semibold">RSVP / Volunteer</h2>
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <form className="rounded-lg bg-white p-6 shadow-sm">
-              <label className="block text-sm font-medium">Full name</label>
-              <input className="mt-1 w-full border rounded px-3 py-2" placeholder="Your name" />
-
-              <label className="block text-sm font-medium mt-4">Email</label>
-              <input className="mt-1 w-full border rounded px-3 py-2" placeholder="name@example.com" />
-
-              <label className="block text-sm font-medium mt-4">I want to</label>
-              <select className="mt-1 w-full border rounded px-3 py-2">
-                <option>Attend</option>
-                <option>Volunteer</option>
-                <option>Help with logistics</option>
-              </select>
-
-              <div className="mt-6 flex gap-3">
-                <button type="button" className="rounded bg-amber-600 text-white px-4 py-2">Submit</button>
-                <button type="button" className="rounded border px-4 py-2">Reset</button>
-              </div>
-            </form>
-
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h3 className="font-semibold">How to help</h3>
-              <p className="text-sm text-slate-600 mt-2">We need volunteers for seating, prasadam distribution, and parking. Bring your friends!</p>
-              <a href="mailto:events@temple.org?subject=Volunteer%20for%20MahaRudra" className="mt-4 inline-block text-amber-600 hover:underline">Email the events team</a>
             </div>
           </div>
         </section>
