@@ -80,7 +80,7 @@ export default function MahaRudraEvent({
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
-            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Rudra Count</a>
+            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Gayatri Japa Abhiyaana</a>
           </nav>
         </div>
       </header>
@@ -154,44 +154,7 @@ export default function MahaRudraEvent({
                 ))}
               </ul>
             </div>
-
-            <div className="rounded-lg bg-white p-4 shadow-sm">
-              <h3 className="font-semibold">Livestream</h3>
-              <p className="text-sm text-slate-600 mt-2">Tune in on our YouTube channel during the event.</p>
-              <a href={`https://www.youtube.com/channel/${youtubeChannelId}`} className="mt-3 inline-block text-sm text-amber-600 hover:underline">Open channel</a>
-            </div>
           </aside>
-        </section>
-
-        {/* Schedule */}
-        <section id="schedule" className="mt-12">
-          <h2 className="text-xl font-semibold">Schedule</h2>
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {schedule.map((s) => (
-              <div key={s.time} className="rounded-lg bg-white p-4 shadow-sm">
-                <div className="text-xs text-slate-500">{s.time}</div>
-                <div className="font-medium mt-1">{s.title}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Stream Embed */}
-        <section id="stream" className="mt-12">
-          <h2 className="text-xl font-semibold">Live Stream</h2>
-          <div className="mt-4 rounded-lg bg-white p-4 shadow-sm">
-            <div className="aspect-w-16 aspect-h-9">
-              {/* YouTube live embed for channel (replace YOUR_CHANNEL_ID) */}
-              <iframe
-                title="livestream"
-                src={`https://www.youtube.com/embed/live_stream?channel=${youtubeChannelId}`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-96 rounded"
-              ></iframe>
-            </div>
-          </div>
         </section>
 
         {/* Footer */}
