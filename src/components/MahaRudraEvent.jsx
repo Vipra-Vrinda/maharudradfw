@@ -80,7 +80,7 @@ export default function MahaRudraEvent({
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
-            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Gayatri Japa Abhiyaana</a>
+            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Rudra Count</a>
           </nav>
         </div>
       </header>
@@ -164,7 +164,7 @@ export default function MahaRudraEvent({
         </section>
 
         {/* Schedule */}
-        <section id="scchedule" className="mt-12">
+        <section id="schedule" className="mt-12">
           <h2 className="text-xl font-semibold">Schedule</h2>
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             {schedule.map((s) => (
