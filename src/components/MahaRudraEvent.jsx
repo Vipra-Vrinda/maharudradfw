@@ -80,7 +80,7 @@ export default function MahaRudraEvent({
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
-            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Rudra Count</a>
+            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Gayatri Japa Abhiyaana</a>
           </nav>
         </div>
       </header>
@@ -95,7 +95,7 @@ export default function MahaRudraEvent({
 
             <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-bold">{title}</h2>
-              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony with family and friends. There will be a group of fifty Kannada Vedic Chanters trained and led by Subramanya Kashyap, along with several priests and Vedic scholars of various traditions leading the processions.</p>
+              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony with all registered Vipra Vrinda family members. There will be a group of fifty Kannada Vedic Chanters trained and led by Subramanya Kashyap, along with several priests and Vedic scholars of various traditions leading the processions.</p>
 
               <div className="mt-4 flex flex-wrap gap-3">
                 <div className="flex items-center gap-3">
@@ -164,7 +164,7 @@ export default function MahaRudraEvent({
         </section>
 
         {/* Schedule */}
-        <section id="schedule" className="mt-12">
+        <section id="scchedule" className="mt-12">
           <h2 className="text-xl font-semibold">Schedule</h2>
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
             {schedule.map((s) => (
