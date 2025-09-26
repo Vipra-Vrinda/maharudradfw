@@ -73,9 +73,6 @@ export default function LiveCountPage() {
               <div className="text-6xl font-extrabold text-red-500">
                 {100000 - count} japa remaining
               </div>
-              <div className="text-6xl font-extrabold text-red-500">
-                {daysRemaining()} days remaining
-              </div>
             </div>
           </div>
         </section>
