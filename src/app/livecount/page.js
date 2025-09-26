@@ -53,7 +53,7 @@ export default function LiveCountPage() {
           <p className="mt-2 text-slate-600"></p>
         </header>
 
-        <section className="bg-[url('../../public/images/gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[750px] md:h-[1104px] text-center flex flex-col justify-end">
+        <section className="bg-[url('../../public/images/gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[600px] md:h-[1104px] text-center flex flex-col justify-end">
           <div className="mt-6 rounded-lg bg-amber-100 p-6 shadow-sm text-center">
             {/* Japa Count */}
             <div className="mt-6 flex justify-center gap-2">
