@@ -50,7 +50,7 @@ export default function LiveCountPage() {
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">ವಿಪ್ರವೃಂದ ಮಹಾರುದ್ರಯಜ್ಞ ಲಕ್ಷಗಾಯತ್ರೀಜಪ</h1>
-          <p className="mt-2 text-slate-600">See how many Gayatri Japa have been done by chanters</p>
+          <p className="mt-2 text-slate-600">Target number for Gayatri Japa: 1 lakh (100,000)</p>
           <img href="../../public/images/shiva.jpg"></img>
         </header>
 
@@ -67,7 +67,7 @@ export default function LiveCountPage() {
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
               <div className="text-6xl font-extrabold text-white">
-                {(count / 100000) * 100}% of target (1 lakh)
+                {Math.floor((count / 100000) * 100)}% completion
               </div>
             </div>
           </div>
