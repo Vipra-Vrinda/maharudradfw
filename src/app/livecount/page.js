@@ -49,16 +49,16 @@ export default function LiveCountPage() {
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900 p-6">
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold">ವಿಪ್ರವೃಂದ ಮಹಾರುದ್ರಯಜ್ಞ ಲಕ್ಷಗಾಯತ್ರೀಜಪ</h1>
+          <h1 className="text-2xl">ವಿಪ್ರವೃಂದ ಮಹಾರುದ್ರಯಜ್ಞ ಲಕ್ಷಗಾಯತ್ರೀಜಪ</h1>
           <p className="mt-2 text-slate-600"></p>
         </header>
 
-        <section className="bg-[url('../../public/images/gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[600px] md:h-[1104px] text-center flex flex-col justify-end">
+        <section className="bg-[url('../../public/images/gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[400px] md:h-[1104px] text-center flex flex-col justify-end">
           <div className="mt-6 rounded-lg bg-amber-100 p-6 shadow-sm text-center">
-            <h2 className="text-2xl font-bold">Gayatri Japa Abhiyaana (100,000)</h2>
-
+            <h2 className="text-2xl font-bold">Gayatri Japa Abhiyaana</h2>
+            <p className="mt-2 text-slate-700">Target: 100,000</p>
             {/* Japa Count */}
-            <div className="mt-6 flex justify-center gap-4">
+            <div className="mt-6 flex justify-center gap-2">
               <div className="p-3 bg-amber-50 rounded text-center">
                 <div className="text-2xl font-semibold text-amber-600">{count}</div>
                 <div className="text-xs text-slate-500">Japa Completed</div>
