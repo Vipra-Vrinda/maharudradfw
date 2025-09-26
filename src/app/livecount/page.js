@@ -71,7 +71,7 @@ export default function LiveCountPage() {
               </div>
             </div>
           </div>
-          <div className="text-sm text-white">Today's Personal Target</div>
+          <div className="text-sm text-white">Daily Personal Target</div>
 
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
