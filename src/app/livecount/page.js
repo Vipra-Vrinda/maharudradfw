@@ -53,7 +53,7 @@ export default function LiveCountPage() {
           <p className="mt-2 text-slate-600">Target number for Gayatri Japa: 1 lakh (100,000)</p>
         </header>
 
-        <section className="bg-[url('../../public/images/Gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 text-center h-[900px] flex flex-col justify-end">
+        <section className="bg-[url('../../public/images/Gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 text-center w-[960px] h-[720px] flex flex-col justify-end">
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
               <div className="text-6xl font-extrabold text-amber-600">
