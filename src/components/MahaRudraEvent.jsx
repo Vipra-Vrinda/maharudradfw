@@ -95,7 +95,7 @@ export default function MahaRudraEvent({
 
             <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-bold">{title}</h2>
-              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony with all registered Vipra Vrinda family members. There will be a group of fifty Kannada Vedic Chanters trained and led by Subramanya Kashyap, along with several priests and Vedic scholars of various traditions leading the processions.</p>
+              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony with registered Vipra Vrinda family members.</p>
 
               <div className="mt-4 flex flex-wrap gap-3">
                 <div className="flex items-center gap-3">
