@@ -56,21 +56,21 @@ export default function LiveCountPage() {
         <section className="bg-[url('../../public/images/gayatribw.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[600px] md:h-[1104px] text-center flex flex-col justify-end">
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-amber-600">
+              <div className="text-6xl text-amber-600">
                 {count} japa completed
               </div>
             </div>
           </div>
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-amber-600">
+              <div className="text-6xl text-amber-600">
                 {Math.floor((count / 100000) * 100)}% completion of target
               </div>
             </div>
           </div>
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-red-500">
+              <div className="text-6xl text-red-500">
                 {100000 - count} japa remaining
               </div>
             </div>
