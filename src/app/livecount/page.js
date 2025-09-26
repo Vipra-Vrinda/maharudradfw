@@ -54,9 +54,6 @@ export default function LiveCountPage() {
         </header>
 
         <section className="bg-[url('../../public/images/Gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 text-center h-[900px] flex flex-col justify-end">
-        </section>
-
-        <section className="rounded-lg shadow p-8 text-center h-128 flex flex-col justify-beginning">
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
               <div className="text-6xl font-extrabold text-amber-600">
