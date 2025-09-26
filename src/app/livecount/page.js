@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 export default function LiveCountPage() {
-  
+
   const [count, setCount] = useState(0);
   useEffect(() => {
     const fetchCount = () => {
@@ -36,7 +36,7 @@ export default function LiveCountPage() {
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
-  
+
   const eventDate = new Date("October 10, 2025" + " " + "11:30 AM")
   function daysRemaining() {
     const diff = Math.max(0, eventDate - now);
@@ -50,32 +50,36 @@ export default function LiveCountPage() {
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">ವಿಪ್ರವೃಂದ ಮಹಾರುದ್ರಯಜ್ಞ ಲಕ್ಷಗಾಯತ್ರೀಜಪ</h1>
-          <p className="mt-2 text-slate-600">Target number for Gayatri Japa: 1 lakh (100,000)</p>
+          <p className="mt-2 text-slate-600"></p>
         </header>
 
-        <section className="bg-[url('../../public/images/gayatribw.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[600px] md:h-[1104px] text-center flex flex-col justify-end">
-          <div className="mt-6">
-            <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl text-amber-600">
-                {count} japa completed
-              </div>
-            </div>
-          </div>
-          <div className="mt-6">
-            <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl text-amber-600">
-                {Math.floor((count / 100000) * 100)}% completion of target
-              </div>
-            </div>
-          </div>
-          <div className="mt-6">
-            <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl text-red-500">
-                {100000 - count} japa remaining
-              </div>
-            </div>
-          </div>
+        <section className="bg-[url('../../public/images/gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 w-full h-[600px] md:h-[1104px] text-center flex flex-col justify-end">
         </section>
+
+        <div className="mt-6 rounded-lg bg-white p-6 shadow-sm text-center">
+          <h2 className="text-2xl font-bold">Gayatri Japa Abhiyaana</h2>
+          <p className="mt-2 text-slate-700">Target number for Gayatri Japa: 1 lakh (100,000)</p>
+
+          {/* Japa Count */}
+          <div className="mt-6 flex justify-center gap-4">
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold text-amber-600">{count}</div>
+              <div className="text-xs text-slate-500">Japa Completed</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded">
+              <div className="text-2xl font-semibold text-amber-600">{Math.floor((count / 100000) * 100)}</div>
+              <div className="text-xs text-slate-500">% Completion</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded">
+              <div className="text-2xl font-semibold text-red-500">{100000 - count}</div>
+              <div className="text-xs text-slate-500">Japa Remaining</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded">
+              <div className="text-2xl font-semibold text-red-500">{daysRemaining()}</div>
+              <div className="text-xs text-slate-500">Days Remaining</div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );
