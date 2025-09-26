@@ -37,7 +37,7 @@ export default function LiveCountPage() {
     return () => clearInterval(t);
   }, []);
   
-  const eventDate = new Date("2025-10-10")
+  const eventDate = new Date("October 10, 2025" + " " + "11:30 AM")
   function daysRemaining() {
     const diff = Math.max(0, eventDate - now);
     const secs = Math.floor(diff / 1000);
