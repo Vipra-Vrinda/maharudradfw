@@ -49,14 +49,14 @@ export default function MahaRudraEvent({
       <header className="bg-white/60 backdrop-blur-sm sticky top-0 z-40 shadow">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img src="/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
+            <img src="/maharudradfw/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
               <p className="text-sm text-slate-600">{date} - {endDate} • {venue}</p>
             </div>
           </div>
           <nav className="flex items-center gap-3">
-            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Gayatri Japa Abhiyaana</a>
+            <a href="/maharudradfw/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Gayatri Japa Abhiyaana</a>
           </nav>
         </div>
       </header>
