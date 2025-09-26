@@ -36,28 +36,7 @@ export default function MahaRudraEvent({
 
   const cd = countdownParts();
 
-  // Sample schedule and performers — edit as needed
-  const schedule = [
-    { time: "Day 1 " + startTime, title: "Inauguration and Ganesh Pooje" },
-    { time: "Day 1 11:40 AM - 12:20 PM", title: "Punyaha and Pancha Gavya" },
-    { time: "Day 1 12:20 PM - 12:30 PM", title: "Raksha Bandana" },
-    { time: "Day 1 12:30 PM - 12:40 PM", title: "Go Pooje" },
-    { time: "Day 1 12:40 PM - 12:50 PM", title: "Ruthwik Varuna" },
-    { time: "Day 1 12:50 PM - 1:50 PM", title: "Kalasha Staphane" },
-    { time: "Day 1 12:50 PM - 2:30 PM", title: "Mahanyasa Parayana" },
-    { time: "Day 1 2:00 PM - 2:30 PM", title: "Volunteer Lunch" },
-    { time: "Day 1 2:40 PM - 3:00 PM", title: "Rudra Parayana Kartha Vasthra Samarpane" },
-    { time: "Day 1 3:00 PM - 3:10 PM", title: "Guru Vandana" },
-    { time: "Day 1 3:10 PM - 3:20 PM", title: "Maha Sankalpa" },
-    { time: "Day 1 3:30 PM - 6:00 PM", title: "Rudra Parayana Ekadasha I" },
-    { time: "Day 1 6:00 PM - 6:15 PM", title: "Break" },
-    { time: "Day 1 6:15 PM - 8:45 PM", title: "Rudra Parayana Ekadasha II & Abhisheka" },
-    { time: "Day 1 8:45 PM - 9:30 PM", title: "Maha Mangalarathi" },
-    { time: "Day 1 9:30 PM - 10:00 PM", title: "Palahaara - Ruthwik Bhojana" },
-  ];
-
   const priests = [
-    { name: "Shri Ravi Vardhan", role: "Priest of Iyengar tradition" },
     { name: "Subramanya Kashyap", role: "Founder of MahaRudra Religious Committee" },
     { name: "Nikhil Kashyap", role: "Member of MahaRudra Religious Committee" },
     { name: "Ravi Balasubramanya", role: "Member of MahaRudra Religious Committee" },
@@ -77,9 +56,6 @@ export default function MahaRudraEvent({
             </div>
           </div>
           <nav className="flex items-center gap-3">
-            <a href="#about" className="text-sm hover:underline">About</a>
-            <a href="#schedule" className="text-sm hover:underline">Schedule</a>
-            <a href="#stream" className="text-sm hover:underline">Stream</a>
             <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Gayatri Japa Abhiyaana</a>
           </nav>
         </div>
@@ -90,7 +66,7 @@ export default function MahaRudraEvent({
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <img src={heroImage} alt="maharudra" className="w-full h-64 object-cover rounded-lg shadow-md" />
+              <img src={heroImage} alt="maharudra" className="w-full h-128 object-cover rounded-lg shadow-md" />
             </motion.div>
 
             <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
@@ -141,7 +117,7 @@ export default function MahaRudraEvent({
             </div>
 
             <div className="rounded-lg bg-white p-4 shadow-sm">
-              <h3 className="font-semibold">Priests & Volunteers</h3>
+              <h3 className="font-semibold">Volunteers</h3>
               <ul className="mt-2 text-sm text-slate-600 space-y-2">
                 {priests.map((s) => (
                   <li key={s.name} className="flex items-center gap-3">

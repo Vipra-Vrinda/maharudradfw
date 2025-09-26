@@ -4,111 +4,82 @@
 import React, { useEffect, useState, useRef } from "react";
 
 export default function LiveCountPage() {
-  const [count, setCount] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [joined, setJoined] = useState(false);
-  const intervalRef = useRef(null);
-  const POLL_MS = 2000;
-
-  async function fetchCount() {
-    try {
-      const res = await fetch("/api/livecount");
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setCount(data.count ?? 0);
-      setLoading(false);
-    } catch (e) {
-      console.error("fetchCount error", e);
-      setLoading(false);
-    }
-  }
-
-  async function updateCount(delta) {
-    try {
-      const res = await fetch("/api/livecount", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ delta }),
-      });
-      if (!res.ok) throw new Error("update failed");
-      const data = await res.json();
-      setCount(data.count);
-    } catch (e) {
-      console.error("updateCount error", e);
-    }
-  }
-
+  
+  const [count, setCount] = useState(0);
   useEffect(() => {
+    const fetchCount = () => {
+      fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT-GCf93D3maBXXSCzDzaXuGcBKupw0Scr2tbRQfnNAgbY-tFk2dN1m7sh-d_7o07NtCDo0o9NakYhL/pub?gid=0&single=true&output=csv")
+        .then((res) => res.text())
+        .then((csv) => {
+          const rows = csv.split("\n").map(r => r.split(","));
+          const d1 = rows[0][2]; // row 1 (0-based), col D (index 3)
+          if (d1) {
+            setCount(Number(d1));
+          }
+        })
+        .catch((err) => console.error("Error fetching sheet:", err));
+    };
+
     // initial fetch
     fetchCount();
 
-    // poll loop
-    intervalRef.current = setInterval(fetchCount, POLL_MS);
-    return () => clearInterval(intervalRef.current);
+    // auto-refresh every 30 seconds
+    const interval = setInterval(fetchCount, 30000);
+
+    // cleanup when component unmounts
+    return () => clearInterval(interval);
   }, []);
 
-  function handleJoin() {
-    if (joined) return;
-    setJoined(true);
-    updateCount(1);
-  }
-
-  function handleLeave() {
-    if (!joined) return;
-    setJoined(false);
-    updateCount(-1);
+  const chanters = 36;
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  
+  const eventDate = new Date("2025-10-10")
+  function daysRemaining() {
+    const diff = Math.max(0, eventDate - now);
+    const secs = Math.floor(diff / 1000);
+    const days = Math.floor(secs / (24 * 3600));
+    return days
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900 p-6">
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold">Live Rudra Counter</h1>
-          <p className="mt-2 text-slate-600">See how many devotees are connected to the Mahā Rudra right now.</p>
+          <h1 className="text-4xl font-bold">ವಿಪ್ರವೃಂದ ಮಹಾರುದ್ರಯಜ್ಞ ಲಕ್ಷಗಾಯತ್ರೀಜಪ</h1>
+          <p className="mt-2 text-slate-600">See how many Gayatri Japa have been done by chanters</p>
+          <img href="../../public/images/shiva.jpg"></img>
         </header>
 
-        <section className="bg-white rounded-lg shadow p-8 text-center">
-          <div className="text-sm text-slate-500">Current connected devotees</div>
+        <section className="bg-[url('../../public/images/Gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 text-center h-[900px] flex flex-col justify-end">
+          <div className="text-sm text-white">Current count</div>
 
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-amber-600">
-                {loading ? "—" : count ?? 0}
+              <div className="text-6xl font-extrabold text-white">
+                {count}
               </div>
-              <div className="text-sm text-slate-500">devotees</div>
             </div>
           </div>
-
-          <div className="mt-6 flex justify-center gap-4">
-            <button
-              onClick={handleJoin}
-              className={`px-6 py-2 rounded-lg font-medium ${joined ? "bg-amber-300 text-white cursor-default" : "bg-amber-600 text-white hover:bg-amber-700"}`}
-              disabled={joined}
-            >
-              {joined ? "You are connected" : "Join Rudra"}
-            </button>
-
-            <button
-              onClick={handleLeave}
-              className="px-6 py-2 rounded-lg border border-amber-600 text-amber-600 hover:bg-amber-50"
-              disabled={!joined}
-            >
-              Leave
-            </button>
+          <div className="mt-6">
+            <div className="inline-flex items-baseline gap-3">
+              <div className="text-6xl font-extrabold text-white">
+                {(count / 100000) * 100}% of target (1 lakh)
+              </div>
+            </div>
           </div>
+          <div className="text-sm text-white">Today's Personal Target</div>
 
-          <div className="mt-6 text-sm text-slate-500">
-            This demo uses simple polling. For production use a persistent store (Redis / DB) and push updates via WebSocket / SSE for real-time accuracy.
+          <div className="mt-6">
+            <div className="inline-flex items-baseline gap-3">
+              <div className="text-6xl font-extrabold text-white">
+                {Math.ceil(((100000 - count) / daysRemaining()) / chanters)} japa
+              </div>
+            </div>
           </div>
-        </section>
-
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold">How it works (demo)</h2>
-          <ol className="mt-2 list-decimal ml-5 text-sm text-slate-600 space-y-1">
-            <li>The page polls <code>/api/livecount</code> every 2 seconds to fetch the current count.</li>
-            <li>Click <strong>Join Rudra</strong> to increment; click <strong>Leave</strong> to decrement.</li>
-            <li>Server keeps the count in memory (demo only) — use Redis / DB for production.</li>
-          </ol>
         </section>
       </main>
     </div>
