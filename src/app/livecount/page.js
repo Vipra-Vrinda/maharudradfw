@@ -61,7 +61,7 @@ export default function LiveCountPage() {
           <p className="mt-2 text-slate-700">Target number for Gayatri Japa: 1 lakh (100,000)</p>
 
           {/* Japa Count */}
-          <div className="mt-6 flex justify-center gap-2">
+          <div className="mt-6 flex justify-center gap-4">
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold text-amber-600">{count}</div>
               <div className="text-xs text-slate-500">Japa Completed</div>
@@ -74,6 +74,8 @@ export default function LiveCountPage() {
               <div className="text-2xl font-semibold text-red-500">{100000 - count}</div>
               <div className="text-xs text-slate-500">Japa Remaining</div>
             </div>
+          </div>
+          <div className="mt-6 flex justify-center gap-2">
             <div className="p-3 bg-amber-50 rounded">
               <div className="text-2xl font-semibold text-red-500">{daysRemaining()}</div>
               <div className="text-xs text-slate-500">Days Remaining</div>
