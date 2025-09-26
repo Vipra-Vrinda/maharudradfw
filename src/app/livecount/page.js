@@ -51,32 +51,33 @@ export default function LiveCountPage() {
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">ವಿಪ್ರವೃಂದ ಮಹಾರುದ್ರಯಜ್ಞ ಲಕ್ಷಗಾಯತ್ರೀಜಪ</h1>
           <p className="mt-2 text-slate-600">Target number for Gayatri Japa: 1 lakh (100,000)</p>
-          <img href="../../public/images/shiva.jpg"></img>
         </header>
 
         <section className="bg-[url('../../public/images/Gayatri.jpg')] bg-cover bg-center rounded-lg shadow p-8 text-center h-[900px] flex flex-col justify-end">
-          <div className="text-sm text-white">Current count</div>
+        </section>
 
+        <section className="rounded-lg shadow p-8 text-center h-128 flex flex-col justify-beginning">
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-white">
-                {count}
+              <div className="text-6xl font-extrabold text-amber-600">
+                {count} japa completed
               </div>
             </div>
           </div>
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-white">
-                {Math.floor((count / 100000) * 100)}% completion
+              <div className="text-6xl font-extrabold text-amber-600">
+                {Math.floor((count / 100000) * 100)}% completion of target
               </div>
             </div>
           </div>
-          <div className="text-sm text-white">Daily Personal Target</div>
-
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
-              <div className="text-6xl font-extrabold text-white">
-                {Math.ceil(((100000 - count) / daysRemaining()) / chanters)} japa
+              <div className="text-6xl font-extrabold text-red-500">
+                {100000 - count} japa remaining
+              </div>
+              <div className="text-6xl font-extrabold text-red-500">
+                {daysRemaining()} days remaining
               </div>
             </div>
           </div>
