@@ -57,12 +57,11 @@ export default function MahaRudraEvent({
   ];
 
   const priests = [
-    { name: "Shri Ravi Vardhan", role: "Priest of Iyengar tradition" },
-    { name: "Subramanya Kashyap", role: "Founder of MahaRudra Religious Committee" },
-    { name: "Nikhil Kashyap", role: "Member of MahaRudra Religious Committee" },
-    { name: "Ravi Balasubramanya", role: "Member of MahaRudra Religious Committee" },
-    { name: "Shailendra Upadhye", role: "Member of MahaRudra Religious Committee" },
-    { name: "Aaditya Murthy", role: "Member of MahaRudra Religious Committee" },
+    { name: "Subramanya Kashyap", role: "MahaRudra Religious Committee" },
+    { name: "Nikhil Kashyap", role: "MahaRudra Religious Committee" },
+    { name: "Ravi Balasubramanya", role: "MahaRudra Religious Committee" },
+    { name: "Shailendra Upadhye", role: "MahaRudra Religious Committee" },
+    { name: "Aaditya Murthy", role: "MahaRudra Religious Committee" },
   ];
 
   return (
@@ -70,7 +69,9 @@ export default function MahaRudraEvent({
       <header className="bg-white/60 backdrop-blur-sm sticky top-0 z-40 shadow">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
+            <a href="https://www.vipravrinda.org">
             <img src="/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
+            </a>
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
               <p className="text-sm text-slate-600">{date} - {endDate} • {venue}</p>
@@ -79,8 +80,9 @@ export default function MahaRudraEvent({
           <nav className="flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
+            <a href="#statistics" className="text-sm hover:underline">Statistics</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
-            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">View Live Rudra Count</a>
+            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">Join Live Rudra</a>
           </nav>
         </div>
       </header>
@@ -90,7 +92,7 @@ export default function MahaRudraEvent({
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <img src={heroImage} alt="maharudra" className="w-full h-64 object-cover rounded-lg shadow-md" />
+              <img src={heroImage} alt="maharudra" className="w-full h-128 object-cover rounded-lg shadow-md" />
             </motion.div>
 
             <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
@@ -174,6 +176,10 @@ export default function MahaRudraEvent({
               </div>
             ))}
           </div>
+        </section>
+
+        <section id="statistics" className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <h2 className="text-xl font-semibold">Statistics</h2>
         </section>
 
         {/* Stream Embed */}
