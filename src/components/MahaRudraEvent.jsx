@@ -49,7 +49,9 @@ export default function MahaRudraEvent({
       <header className="bg-white/60 backdrop-blur-sm sticky top-0 z-40 shadow">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
+            <a href="https://www.vipravrinda.org">
             <img src="/maharudradfw/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
+            </a>
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
               <p className="text-sm text-slate-600">{date} - {endDate} • {venue}</p>
