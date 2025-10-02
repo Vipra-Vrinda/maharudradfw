@@ -17,6 +17,7 @@ export default function MahaRudraEvent({
   youtubeChannelId = "YOUR_CHANNEL_ID",
 }) {
   const eventDate = new Date(date + " " + startTime);
+  const isLoggedIn = false;
 
   const [now, setNow] = useState(new Date());
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function MahaRudraEvent({
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <a href="https://www.vipravrinda.org">
-            <img src="/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
+              <img src="/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
             </a>
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
@@ -82,7 +83,21 @@ export default function MahaRudraEvent({
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="#statistics" className="text-sm hover:underline">Statistics</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
-            <a href="/livecount" className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium">Join Live Rudra</a>
+            {isLoggedIn ? (
+              <a
+                href="/livecount"
+                className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
+              >
+                Join Live Rudra
+              </a>
+            ) : (
+              <a
+                href="/login"
+                className="ml-2 inline-block rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
+              >
+                Login to Live Rudra
+              </a>
+            )}
           </nav>
         </div>
       </header>
@@ -179,7 +194,7 @@ export default function MahaRudraEvent({
         </section>
 
         <section id="statistics" className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-        <h2 className="text-xl font-semibold">Statistics</h2>
+          <h2 className="text-xl font-semibold">Statistics</h2>
         </section>
 
         {/* Stream Embed */}
