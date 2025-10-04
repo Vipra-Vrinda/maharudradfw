@@ -1,19 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase";
+import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
+  const gotra = "rishi";
+  const users = {
+    "brahmana": gotra
+  }
 
   function validate() {
-    if (!email) return "Please enter your email.";
-    // simple email check
-    if (!/^\S+@\S+\.\S+$/.test(email)) return "Please enter a valid email.";
+    if (!username) return "Please enter your username.";
     if (!password) return "Please enter your password.";
     if (password.length < 6) return "Password must be at least 6 characters.";
     return "";
@@ -31,20 +36,13 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, remember }),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.message || "Login failed");
+      // validate with firebase Auth
+      if (users[username] != password) {
+        throw new Error("Login details are not correct. Please refer to registration desk for the correct spelling of gotras. If login issues persist, please find a member of the technical support team (Ravi Balasubramanya or Aaditya Murthy).");
       }
-
-      const data = await res.json();
-      setSuccess(data.message || "Logged in");
+      setSuccess("Logged in");
       // redirect or update app state as needed
+      router.push("/livecount"); // redirect to livecount
     } catch (err) {
       setError(err.message || "An error occurred");
     } finally {
@@ -56,8 +54,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900 p-6 flex items-center justify-center">
       <main className="w-full max-w-md">
         <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold">Sign in to VipraVrinda</h1>
-          <p className="mt-2 text-slate-600 text-sm">Access your Mahā Rudra dashboard and join live events.</p>
+          <h1 className="text-3xl font-bold">Sign in to MahaRudra</h1>
+          <p className="mt-2 text-slate-600 text-sm">Access your Mahā Rudra chanting experience to join live rudra.</p>
         </header>
 
         <section className="bg-white rounded-lg shadow p-6">
@@ -71,16 +69,16 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-                Email
+                Username
               </label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value + "@maharudradfw.org")}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
-                placeholder="you@example.com"
-                autoComplete="email"
+                placeholder="Last name and first initial (Eg: kashyaps)"
+                autoComplete="username"
                 required
               />
             </div>
@@ -93,28 +91,12 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value + "Gotra1010")}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
-                placeholder="••••••••"
+                placeholder="Enter your gotra here (first letter capital)"
                 autoComplete="current-password"
                 required
               />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <label className="inline-flex items-center text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={remember}
-                  onChange={(e) => setRemember(e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
-                />
-                <span className="ml-2">Remember me</span>
-              </label>
-
-              <a href="#" className="text-sm text-amber-600 hover:underline">
-                Forgot password?
-              </a>
             </div>
 
             <div className="flex flex-col gap-3">
@@ -124,31 +106,8 @@ export default function LoginPage() {
                 className={`px-4 py-2 rounded-lg font-medium text-white ${loading ? "bg-amber-300 cursor-wait" : "bg-amber-600 hover:bg-amber-700"}`}>
                 {loading ? "Signing in…" : "Sign in"}
               </button>
-
-              <button
-                type="button"
-                onClick={() => alert('TODO: social auth')}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50">
-                Sign in with Google
-              </button>
-            </div>
-
-            <div className="text-xs text-slate-500 text-center pt-2">
-              By signing in you agree to our <a className="text-amber-600 hover:underline" href="#">Terms</a>.
             </div>
           </form>
-        </section>
-
-        <section className="mt-6 text-center text-sm text-slate-600">
-          <div>Don't have an account? <a href="#" className="text-amber-600 hover:underline">Create one</a></div>
-
-          <div className="mt-4 bg-white rounded-lg shadow p-4 text-left text-xs text-slate-500">
-            <div className="font-semibold text-slate-700">Notes</div>
-            <ol className="list-decimal ml-5 mt-2 space-y-1">
-              <li>This layout mirrors the Live Rudra Counter: calm amber palette, rounded cards, and a centered max-width container.</li>
-              <li>For production, implement proper auth: rate limits, CSRF protection, secure cookies, and server-side validation.</li>
-            </ol>
-          </div>
         </section>
       </main>
     </div>

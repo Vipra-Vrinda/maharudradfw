@@ -4,46 +4,50 @@
 import React, { useEffect, useState, useRef } from "react";
 
 export default function LiveCountPage() {
-  const [count, setCount] = useState(null);
+  const [chanterCount, setNumChanters] = seState(0);
+  const [rudraCount, setRudraCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [joined, setJoined] = useState(false);
+  const [chantingInProgress, setChantingInProgress] = useState(true);
   const intervalRef = useRef(null);
   const POLL_MS = 2000;
+  const timerValue = 60
+  const eventDate = new Date("October 10, 2025")
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
 
-  async function fetchCount() {
-    try {
-      const res = await fetch("/api/livecount");
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setCount(data.count ?? 0);
-      setLoading(false);
-    } catch (e) {
-      console.error("fetchCount error", e);
-      setLoading(false);
-    }
+  async function fetchChanterCount() {
+    return chanters
   }
 
-  async function updateCount(delta) {
+  function updateChanterCount(delta) {
     try {
-      const res = await fetch("/api/livecount", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ delta }),
-      });
-      if (!res.ok) throw new Error("update failed");
-      const data = await res.json();
-      setCount(data.count);
+      setNumChanters(fetchChanters() + delta);
     } catch (e) {
       console.error("updateCount error", e);
     }
   }
 
+  async function fetchRudraCount() {
+    return chanters
+  }
+
+  async function rudraCount() {
+    const diff = Math.max(0, eventDate - now);
+    const secs = Math.floor(diff / 1000);
+    const days = Math.floor(secs / (24 * 3600));
+    return { days };
+  }
+
   useEffect(() => {
     // initial fetch
-    fetchCount();
+    fetchChanterCount();
 
     // poll loop
-    intervalRef.current = setInterval(fetchCount, POLL_MS);
+    intervalRef.current = setInterval(fetchChanters, POLL_MS);
     return () => clearInterval(intervalRef.current);
   }, []);
 
@@ -64,51 +68,57 @@ export default function LiveCountPage() {
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">Live Rudra Counter</h1>
-          <p className="mt-2 text-slate-600">See how many devotees are connected to the Mahā Rudra right now.</p>
+          <p className="mt-2 text-slate-600">View current number of chanters in the session and the current Rudra count</p>
         </header>
 
         <section className="bg-white rounded-lg shadow p-8 text-center">
-          <div className="text-sm text-slate-500">Current connected devotees</div>
+          <div className="text-sm text-slate-500">{chantingInProgress ? "Chanting is in progress" : "Chanting on break for " + timerValue + "s"}</div>
 
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
               <div className="text-6xl font-extrabold text-amber-600">
-                {loading ? "—" : count ?? 0}
+                {loading ? "—" : chanters ?? 0}
               </div>
-              <div className="text-sm text-slate-500">devotees</div>
+              <div className="text-sm text-slate-500">chanters</div>
             </div>
           </div>
 
           <div className="mt-6 flex justify-center gap-4">
             <button
               onClick={handleJoin}
-              className={`px-6 py-2 rounded-lg font-medium ${joined ? "bg-amber-300 text-white cursor-default" : "bg-amber-600 text-white hover:bg-amber-700"}`}
-              disabled={joined}
+              className={`px-6 py-2 rounded-lg font-medium ${(joined || chantingInProgress) ? "bg-amber-300 text-white cursor-default" : "bg-amber-600 text-white hover:bg-amber-700"}`}
+              disabled={joined || chantingInProgress}
             >
               {joined ? "You are connected" : "Join Rudra"}
             </button>
 
             <button
               onClick={handleLeave}
-              className="px-6 py-2 rounded-lg border border-amber-600 text-amber-600 hover:bg-amber-50"
-              disabled={!joined}
+              className={`px-6 py-2 rounded-lg border ${(chantingInProgress) ? "border-amber-300 text-amber-300 cursor-default" : "border-amber-600 text-amber-600 hover:bg-amber-50"}`}
+              disabled={!joined || chantingInProgress}
             >
               Leave
             </button>
           </div>
-
-          <div className="mt-6 text-sm text-slate-500">
-            This demo uses simple polling. For production use a persistent store (Redis / DB) and push updates via WebSocket / SSE for real-time accuracy.
-          </div>
         </section>
-
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold">How it works (demo)</h2>
-          <ol className="mt-2 list-decimal ml-5 text-sm text-slate-600 space-y-1">
-            <li>The page polls <code>/api/livecount</code> every 2 seconds to fetch the current count.</li>
-            <li>Click <strong>Join Rudra</strong> to increment; click <strong>Leave</strong> to decrement.</li>
-            <li>Server keeps the count in memory (demo only) — use Redis / DB for production.</li>
-          </ol>
+        <br style={{ marginBottom: 8 }} />
+        <div className="text-sm text-slate-500 text-center">Please note that you may only leave or join the session once the current session is over.</div>
+        <br style={{ marginBottom: 8 }} />
+        <section className="bg-white bg-center rounded-lg shadow p-6">
+          <div className="mt-6 flex justify-center gap-2">
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{currentCount.days}</div>
+              <div className="text-xs text-slate-500">Rudras Chanted</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{currentCount.days}:{currentCount.secs}</div>
+              <div className="text-xs text-slate-500">Current Session Elapsed Time</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{1331 - currentCount.days}</div>
+              <div className="text-xs text-slate-500">Rudras remaining</div>
+            </div>
+          </div>
         </section>
       </main>
     </div>

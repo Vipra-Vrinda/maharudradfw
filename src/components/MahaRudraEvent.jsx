@@ -14,7 +14,7 @@ export default function MahaRudraEvent({
   startTime = "11:30 AM",
   venue = "DFW Hindu Temple, Cultural Hall",
   heroImage = "https://yogaeastwest.com/wp-content/uploads/2024/10/pexels-rajjatbayas-5935662-scaled.jpg.webp",
-  youtubeChannelId = "YOUR_CHANNEL_ID",
+  youtubeChannelId = "UCNhX3E23NrZ2pOfFYdWP_Vg",
 }) {
   const eventDate = new Date(date + " " + startTime);
   const isLoggedIn = false;
@@ -37,32 +37,52 @@ export default function MahaRudraEvent({
 
   const cd = countdownParts();
 
-  // Sample schedule and performers — edit as needed
-  const schedule = [
-    { time: "Day 1 " + startTime, title: "Inauguration and Ganesh Pooje" },
-    { time: "Day 1 11:40 AM - 12:20 PM", title: "Punyaha and Pancha Gavya" },
-    { time: "Day 1 12:20 PM - 12:30 PM", title: "Raksha Bandana" },
-    { time: "Day 1 12:30 PM - 12:40 PM", title: "Go Pooje" },
-    { time: "Day 1 12:40 PM - 12:50 PM", title: "Ruthwik Varuna" },
-    { time: "Day 1 12:50 PM - 1:50 PM", title: "Kalasha Staphane" },
-    { time: "Day 1 12:50 PM - 2:30 PM", title: "Mahanyasa Parayana" },
-    { time: "Day 1 2:00 PM - 2:30 PM", title: "Volunteer Lunch" },
-    { time: "Day 1 2:40 PM - 3:00 PM", title: "Rudra Parayana Kartha Vasthra Samarpane" },
-    { time: "Day 1 3:00 PM - 3:10 PM", title: "Guru Vandana" },
-    { time: "Day 1 3:10 PM - 3:20 PM", title: "Maha Sankalpa" },
-    { time: "Day 1 3:30 PM - 6:00 PM", title: "Rudra Parayana Ekadasha I" },
-    { time: "Day 1 6:00 PM - 6:15 PM", title: "Break" },
-    { time: "Day 1 6:15 PM - 8:45 PM", title: "Rudra Parayana Ekadasha II & Abhisheka" },
-    { time: "Day 1 8:45 PM - 9:30 PM", title: "Maha Mangalarathi" },
-    { time: "Day 1 9:30 PM - 10:00 PM", title: "Palahaara - Ruthwik Bhojana" },
+  const day1_schedule = [
+    { time: startTime, title: "Inauguration and Ganesh Pooje" },
+    { time: "11:40 AM", title: "Punyaha and Pancha Gavya" },
+    { time: "12:20 PM", title: "Raksha Bandana" },
+    { time: "12:30 PM", title: "Go Pooje" },
+    { time: "12:40 PM", title: "Ruthwik Varuna" },
+    { time: "12:50 PM", title: "Kalasha Staphane" },
+    { time: "1:00 PM", title: "Mahanyasa Parayana" },
+    { time: "2:00 PM", title: "Volunteer Lunch" },
+    { time: "2:40 PM", title: "Rudra Parayana Kartha Vasthra Samarpane" },
+    { time: "3:00 PM", title: "Guru Vandana" },
+    { time: "3:10 PM", title: "Maha Sankalpa" },
+    { time: "3:30 PM", title: "Rudra Parayana Ekadasha I" },
+    { time: "6:00 PM", title: "Break" },
+    { time: "6:15 PM", title: "Rudra Parayana Ekadasha II & Abhisheka" },
+    { time: "8:45 PM", title: "Maha Mangalarathi" },
+    { time: "9:30 PM", title: "Palahaara - Ruthwik Bhojana" },
+  ];
+
+  const day2_schedule = [
+    { time: "7:00 AM", title: "Guru Vandane" },
+    { time: "7:10 AM", title: "Ganesha Pooje" },
+    { time: "7:20 AM", title: "Laghunyasa" },
+    { time: "7:35 AM", title: "Rudra Parayana Ekadasha III & Abhisheka" },
+    { time: "10:15 AM", title: "Break" },
+    { time: "10:45 AM", title: "Utsava" },
+    { time: "11:00 AM", title: "Homa and Punahuthi" },
+    { time: "1:00 PM", title: "Astavadhana Pooje" },
+    { time: "1:30 PM", title: "Maha Mangalarathi" },
+    { time: "2:00 PM", title: "Prasada" },
   ];
 
   const priests = [
-    { name: "Subramanya Kashyap", role: "MahaRudra Religious Committee" },
-    { name: "Nikhil Kashyap", role: "MahaRudra Religious Committee" },
-    { name: "Ravi Balasubramanya", role: "MahaRudra Religious Committee" },
-    { name: "Shailendra Upadhye", role: "MahaRudra Religious Committee" },
-    { name: "Aaditya Murthy", role: "MahaRudra Religious Committee" },
+    { name: "Gopalkrishna Bhatt", role: "Priest" },
+    { name: "Ravi Vardhan", role: "Priest" },
+    { name: "Subramanya Kashyap", role: "Religious Committee" },
+    { name: "Nikhil Kashyap", role: "Religious Committee" },
+    { name: "Ravi Balasubramanya", role: "Religious Committee" },
+    { name: "Shailendra Upadhye", role: "Religious Committee" },
+    { name: "Aaditya Murthy", role: "Religious Committee and Vipra Vrinda Youth Leader" },
+  ];
+
+  const testimonials = [
+    {
+      name: "Sreenivasa \"Govinda\" Rao", role: "MahaRudra Religious Committee", text: "I do not know what we have done in this life or in the previous lives or in the lives of our fathers and ancestors that we have the rare opportunity to put together an event like MahaRudra Yagna. I am even more grateful and thankful for everybody that is working so hard to make this an amazing event. What does this Yagna mean? What will it do for us ? Why us? These are the questions we all tend to get closer to this date.Here is how I see it - Bodhayana in his treatise on Rudram and Chamakam says - \"Na A Rudro Rudram Archayet\" This has been my go - to statement since we even conceived this event.What he says is - You have to become Rudra to worship Rudra! Om Tat Sat! Jai Shankara Shamboh!! 🙏🏼",
+    },
   ];
 
   return (
@@ -80,9 +100,9 @@ export default function MahaRudraEvent({
           </div>
           <nav className="flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
-            <a href="#schedule" className="text-sm hover:underline">Schedule</a>
-            <a href="#statistics" className="text-sm hover:underline">Statistics</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
+            <a href="#schedule" className="text-sm hover:underline">Schedule</a>
+            <a href="#testimonials" className="text-sm hover:underline">Testimonials</a>
             {isLoggedIn ? (
               <a
                 href="/livecount"
@@ -95,7 +115,7 @@ export default function MahaRudraEvent({
                 href="/login"
                 className="ml-2 inline-block rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
               >
-                Login to Live Rudra
+                Login
               </a>
             )}
           </nav>
@@ -104,7 +124,7 @@ export default function MahaRudraEvent({
 
       <main className="max-w-6xl mx-auto px-6 py-12">
         {/* Hero */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="about">
           <div className="md:col-span-2">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <img src={heroImage} alt="maharudra" className="w-full h-128 object-cover rounded-lg shadow-md" />
@@ -171,11 +191,39 @@ export default function MahaRudraEvent({
                 ))}
               </ul>
             </div>
+          </aside>
+        </section>
+        <br style={{ marginBottom: 8 }} />
+        {/* Stream embed */}
+        <h2 className="text-xl font-semibold">Live Stream</h2>
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="stream">
+          <div className="md:col-span-2">
+            <div className="aspect-w-16 aspect-h-9">
+              <iframe
+                title="livestream"
+                src={`https://www.youtube.com/embed/live_stream?channel=${youtubeChannelId}`}
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-96 rounded"
+              ></iframe>
+            </div>
+          </div>
 
+          {/* Right column cards */}
+          <aside className="space-y-4">
             <div className="rounded-lg bg-white p-4 shadow-sm">
-              <h3 className="font-semibold">Livestream</h3>
-              <p className="text-sm text-slate-600 mt-2">Tune in on our YouTube channel during the event.</p>
-              <a href={`https://www.youtube.com/channel/${youtubeChannelId}`} className="mt-3 inline-block text-sm text-amber-600 hover:underline">Open channel</a>
+              <h3 className="font-semibold">Statistics</h3>
+              <ul className="mt-2 text-sm text-slate-600 space-y-2">
+                {priests.map((s) => (
+                  <li key={s.name} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-semibold">{s.name.split(" ")[0][0]}</div>
+                    <div>
+                      <div className="font-medium">{s.name}</div>
+                      <div className="text-xs text-slate-500">{s.role}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           </aside>
         </section>
@@ -183,8 +231,20 @@ export default function MahaRudraEvent({
         {/* Schedule */}
         <section id="schedule" className="mt-12">
           <h2 className="text-xl font-semibold">Schedule</h2>
+          <br style={{ marginBottom: 8 }} />
+          <h3 className="text-l">Day 1</h3>
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {schedule.map((s) => (
+            {day1_schedule.map((s) => (
+              <div key={s.time} className="rounded-lg bg-white p-4 shadow-sm">
+                <div className="text-xs text-slate-500">{s.time}</div>
+                <div className="font-medium mt-1">{s.title}</div>
+              </div>
+            ))}
+          </div>
+          <br style={{ marginBottom: 8 }} />
+          <h3 className="text-l">Day 2</h3>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {day2_schedule.map((s) => (
               <div key={s.time} className="rounded-lg bg-white p-4 shadow-sm">
                 <div className="text-xs text-slate-500">{s.time}</div>
                 <div className="font-medium mt-1">{s.title}</div>
@@ -192,27 +252,19 @@ export default function MahaRudraEvent({
             ))}
           </div>
         </section>
-
-        <section id="statistics" className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-          <h2 className="text-xl font-semibold">Statistics</h2>
-        </section>
-
-        {/* Stream Embed */}
-        <section id="stream" className="mt-12">
-          <h2 className="text-xl font-semibold">Live Stream</h2>
-          <div className="mt-4 rounded-lg bg-white p-4 shadow-sm">
-            <div className="aspect-w-16 aspect-h-9">
-              {/* YouTube live embed for channel (replace YOUR_CHANNEL_ID) */}
-              <iframe
-                title="livestream"
-                src={`https://www.youtube.com/embed/live_stream?channel=${youtubeChannelId}`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-96 rounded"
-              ></iframe>
-            </div>
-          </div>
+        <br style={{ marginBottom: 8 }} />
+        <section id="testimonials" className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h2 className="text-xl font-semibold">Testimonials</h2>
+          <br style={{ marginBottom: 8 }} />
+          {testimonials.map((t, index) => (<div key={index} className={`rounded-lg bg-white p-6 shadow-md text-center
+          ${testimonials.length % 2 === 1 && index === testimonials.length - 1
+              ? "md:col-span-2 md:justify-self-center"
+              : ""
+            }
+          `}>
+            <p className="italic text-gray-700">"{t.text}"</p>
+            <p className="mt-2 text-sm text-slate-500 font-medium">— {t.name}, {t.role}</p>
+          </div>))}
         </section>
 
         {/* Footer */}
