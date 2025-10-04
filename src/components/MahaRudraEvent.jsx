@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { auth } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { signOut } from "firebase/auth";
 
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
@@ -87,6 +85,7 @@ export default function MahaRudraEvent({
     },
   ];
 
+  if (loading) return <p>Loading...</p>;
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900">
       <header className="bg-white/60 backdrop-blur-sm sticky top-0 z-40 shadow">

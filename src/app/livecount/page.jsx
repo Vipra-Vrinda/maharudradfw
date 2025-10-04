@@ -2,29 +2,26 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function LiveCountPage() {
+  const { user, loading } = useAuth();
   const [chanterCount, setNumChanters] = useState(0);
   const [rudraCount, setRudraCount] = useState(2);
-  const [loading, setLoading] = useState(false);
+  const [chanterCountLoading, setChanterCountLoading] = useState(false);
+  const [rudraCountLoading, setRudraCountLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [chantingInProgress, setChantingInProgress] = useState(true);
+  const router = useRouter();
   const intervalRef = useRef(null);
   const POLL_MS = 2000;
-  const timerValue = 60
-  const eventDate = new Date("October 10, 2025")
-  const [now, setNow] = useState(new Date());
-  // useEffect(() => {
-  //   const t = setInterval(() => setNow(new Date()), 1000);
-  //   return () => clearInterval(t);
-  // }, []);
-
-  // useEffect(() => {
-  //   // initial fetch
-  //   // poll loop
-  //   intervalRef.current = setInterval(fetchChanters, POLL_MS);
-  //   return () => clearInterval(intervalRef.current);
-  // }, []);
+  const timerValue = 45
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/livecount");
+    }
+  }, [user, loading, router]);
 
   function handleJoin() {
     if (joined) return;
@@ -37,7 +34,8 @@ export default function LiveCountPage() {
     setJoined(false);
     updateCount(-1);
   }
-
+  if (loading) return <p>Loading...</p>;
+  if (!user) return null; // temporarily render nothing while redirecting
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900 p-6">
       <main className="max-w-4xl mx-auto">
@@ -52,7 +50,7 @@ export default function LiveCountPage() {
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
               <div className="text-6xl font-extrabold text-amber-600">
-                {loading ? "—" : chanterCount ?? 0}
+                {chanterCountLoading ? "—" : chanterCount ?? 0}
               </div>
               <div className="text-sm text-slate-500">chanters</div>
             </div>
@@ -82,7 +80,7 @@ export default function LiveCountPage() {
         <section className="bg-white bg-center rounded-lg shadow p-6">
           <div className="mt-6 flex justify-center gap-2">
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{rudraCount}</div>
+              <div className="text-2xl font-semibold">{rudraCountLoading ? "-" : rudraCount ?? 0}</div>
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
@@ -95,6 +93,13 @@ export default function LiveCountPage() {
             </div>
           </div>
         </section>
+        <br style={{ marginBottom: 8 }} />
+        <div className="flex justify-center">
+          <button
+            onClick={() => { router.push("/") }}
+            className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700 "
+          >Back to MahaRudra Dashboard</button>
+        </div>
       </main>
     </div>
   );

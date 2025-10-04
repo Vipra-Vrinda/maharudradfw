@@ -1,17 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
+import { useAuth } from "@/context/AuthContext";
 import { signInWithEmailAndPassword} from "firebase/auth";
 
 export default function LoginPage() {
+  const { user, loading } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (user && !loading) {
+      router.push("/livecount");
+    }
+  }, [user, loading, router]);
 
   function validate() {
     if (!username) return "Please enter your username.";
@@ -23,7 +30,6 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
-    setLoading(true);
     const v = validate();
     if (v) {
       setError(v);
@@ -40,9 +46,6 @@ export default function LoginPage() {
       })
       .catch((error) => {
         setError("Incorrect Login Credentials. Refer to registration desk for correct spellings of gotras. If issues persist, please contact technical support team.");
-      })
-      .finally(() => {
-        setLoading(false);
       });
   }
 
