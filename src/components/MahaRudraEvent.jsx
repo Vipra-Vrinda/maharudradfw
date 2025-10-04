@@ -2,6 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { auth } from "@/lib/firebase";
+import { useAuth } from "@/context/AuthContext";
+import { signOut } from "firebase/auth";
 
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
@@ -17,8 +20,7 @@ export default function MahaRudraEvent({
   youtubeChannelId = "UCNhX3E23NrZ2pOfFYdWP_Vg",
 }) {
   const eventDate = new Date(date + " " + startTime);
-  const isLoggedIn = false;
-
+  const { user, loading, logout } = useAuth();
   const [now, setNow] = useState(new Date());
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
@@ -103,7 +105,7 @@ export default function MahaRudraEvent({
             <a href="#stream" className="text-sm hover:underline">Stream</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="#testimonials" className="text-sm hover:underline">Testimonials</a>
-            {isLoggedIn ? (
+            {(user != null) && (!loading) ? (
               <a
                 href="/livecount"
                 className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
@@ -118,6 +120,15 @@ export default function MahaRudraEvent({
                 Login
               </a>
             )}
+            {(user != null) && (!loading) ? (
+              <a
+                href="#testimonials"
+                className="text-sm hover:underline"
+                onClick={logout}
+              >
+                Sign Out
+              </a>
+            ) : (<></>)}
           </nav>
         </div>
       </header>

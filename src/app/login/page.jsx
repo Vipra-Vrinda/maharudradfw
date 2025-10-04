@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
-import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword} from "firebase/auth";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -12,15 +12,10 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const router = useRouter();
-  const gotra = "rishi";
-  const users = {
-    "brahmana": gotra
-  }
 
   function validate() {
     if (!username) return "Please enter your username.";
     if (!password) return "Please enter your password.";
-    if (password.length < 6) return "Password must be at least 6 characters.";
     return "";
   }
 
@@ -28,26 +23,27 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setLoading(true);
     const v = validate();
     if (v) {
       setError(v);
       return;
     }
 
-    setLoading(true);
-    try {
-      // validate with firebase Auth
-      if (users[username] != password) {
-        throw new Error("Login details are not correct. Please refer to registration desk for the correct spelling of gotras. If login issues persist, please find a member of the technical support team (Ravi Balasubramanya or Aaditya Murthy).");
-      }
-      setSuccess("Logged in");
-      // redirect or update app state as needed
-      router.push("/livecount"); // redirect to livecount
-    } catch (err) {
-      setError(err.message || "An error occurred");
-    } finally {
-      setLoading(false);
-    }
+    // validate with firebase Auth, if success, set loading to false, and redirect
+    signInWithEmailAndPassword(auth, username + "@maharudradfw.org", password + "Gotra")
+      .then(() => {
+        // Signed in 
+        setSuccess(true);
+        // ...
+        router.push("/livecount"); // redirect to livecount
+      })
+      .catch((error) => {
+        setError("Incorrect Login Credentials. Refer to registration desk for correct spellings of gotras. If issues persist, please contact technical support team.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -75,7 +71,7 @@ export default function LoginPage() {
                 id="username"
                 type="username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value + "@maharudradfw.org")}
+                onChange={(e) => setUsername(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
                 placeholder="Last name and first initial (Eg: kashyaps)"
                 autoComplete="username"
@@ -91,7 +87,7 @@ export default function LoginPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value + "Gotra1010")}
+                onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
                 placeholder="Enter your gotra here (first letter capital)"
                 autoComplete="current-password"

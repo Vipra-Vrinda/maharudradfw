@@ -4,9 +4,9 @@
 import React, { useEffect, useState, useRef } from "react";
 
 export default function LiveCountPage() {
-  const [chanterCount, setNumChanters] = seState(0);
-  const [rudraCount, setRudraCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [chanterCount, setNumChanters] = useState(0);
+  const [rudraCount, setRudraCount] = useState(2);
+  const [loading, setLoading] = useState(false);
   const [joined, setJoined] = useState(false);
   const [chantingInProgress, setChantingInProgress] = useState(true);
   const intervalRef = useRef(null);
@@ -14,42 +14,17 @@ export default function LiveCountPage() {
   const timerValue = 60
   const eventDate = new Date("October 10, 2025")
   const [now, setNow] = useState(new Date());
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
+  // useEffect(() => {
+  //   const t = setInterval(() => setNow(new Date()), 1000);
+  //   return () => clearInterval(t);
+  // }, []);
 
-  async function fetchChanterCount() {
-    return chanters
-  }
-
-  function updateChanterCount(delta) {
-    try {
-      setNumChanters(fetchChanters() + delta);
-    } catch (e) {
-      console.error("updateCount error", e);
-    }
-  }
-
-  async function fetchRudraCount() {
-    return chanters
-  }
-
-  async function rudraCount() {
-    const diff = Math.max(0, eventDate - now);
-    const secs = Math.floor(diff / 1000);
-    const days = Math.floor(secs / (24 * 3600));
-    return { days };
-  }
-
-  useEffect(() => {
-    // initial fetch
-    fetchChanterCount();
-
-    // poll loop
-    intervalRef.current = setInterval(fetchChanters, POLL_MS);
-    return () => clearInterval(intervalRef.current);
-  }, []);
+  // useEffect(() => {
+  //   // initial fetch
+  //   // poll loop
+  //   intervalRef.current = setInterval(fetchChanters, POLL_MS);
+  //   return () => clearInterval(intervalRef.current);
+  // }, []);
 
   function handleJoin() {
     if (joined) return;
@@ -77,7 +52,7 @@ export default function LiveCountPage() {
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
               <div className="text-6xl font-extrabold text-amber-600">
-                {loading ? "—" : chanters ?? 0}
+                {loading ? "—" : chanterCount ?? 0}
               </div>
               <div className="text-sm text-slate-500">chanters</div>
             </div>
@@ -107,15 +82,15 @@ export default function LiveCountPage() {
         <section className="bg-white bg-center rounded-lg shadow p-6">
           <div className="mt-6 flex justify-center gap-2">
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{currentCount.days}</div>
+              <div className="text-2xl font-semibold">{rudraCount}</div>
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{currentCount.days}:{currentCount.secs}</div>
+              <div className="text-2xl font-semibold">09:12</div>
               <div className="text-xs text-slate-500">Current Session Elapsed Time</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{1331 - currentCount.days}</div>
+              <div className="text-2xl font-semibold">{1331 - rudraCount}</div>
               <div className="text-xs text-slate-500">Rudras remaining</div>
             </div>
           </div>
