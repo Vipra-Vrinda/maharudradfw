@@ -42,7 +42,7 @@ export default function MahaRudraEvent({
     { name: "Ravi Balasubramanya", role: "Religious Committee Member" },
     { name: "Shailendra Upadhye", role: "Religious Committee Member" },
     { name: "Sreenivas Ram", role: "Religious Committee Member" },
-    { name: "Aaditya Murthy", role: "Vipra Vrinda Youth Leader" },
+    { name: "Aaditya Murthy", role: "Vipra Vrinda Youth Committee Leader" },
   ];
 
   return (
