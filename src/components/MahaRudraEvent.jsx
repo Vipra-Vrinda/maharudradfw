@@ -37,11 +37,12 @@ export default function MahaRudraEvent({
   const cd = countdownParts();
 
   const priests = [
-    { name: "Subramanya Kashyap", role: "MahaRudra Religious Committee" },
-    { name: "Nikhil Kashyap", role: "MahaRudra Religious Committee" },
-    { name: "Ravi Balasubramanya", role: "MahaRudra Religious Committee" },
-    { name: "Shailendra Upadhye", role: "MahaRudra Religious Committee" },
-    { name: "Aaditya Murthy", role: "MahaRudra Religious Committee" },
+    { name: "Subramanya Kashyap", role: "Religious Committee Member" },
+    { name: "Nikhil Kashyap", role: "Religious Committee Member" },
+    { name: "Ravi Balasubramanya", role: "Religious Committee Member" },
+    { name: "Shailendra Upadhye", role: "Religious Committee Member" },
+    { name: "Sreenivas Ram", role: "Religious Committee Member" },
+    { name: "Aaditya Murthy", role: "Vipra Vrinda Youth Leader" },
   ];
 
   return (
