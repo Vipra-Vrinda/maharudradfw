@@ -15,6 +15,7 @@ export default function LiveCountPage() {
   const [breakTimer, setBreakTimer] = useState(0);
   const [chanterCountLoading, setChanterCountLoading] = useState(false);
   const [rudraCountLoading, setRudraCountLoading] = useState(false);
+  const [leaveEnabled, enableLeave] = useState(false);
   const [joined, setJoined] = useState(false);
   const [chantingInProgress, setChantingInProgress] = useState(false);
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function LiveCountPage() {
     const chanterRef = ref(db, "counters/chanterCount");
     const breakRef = ref(db, "breakTimer");
     const chantingInProgressRef = ref(db, "chanting");
+    const leaveEnabledRef = ref(db, "sessions/" + uid + "/leaveEnabled");
 
     // Listen for changes
     const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
@@ -53,11 +55,16 @@ export default function LiveCountPage() {
       setChantingInProgress(snapshot.val() || false);
     });
 
+    const unsubscribeLeave = onValue(leaveEnabledRef, (snapshot) => {
+      enableLeave(snapshot.val() || false);
+    });
+
     return () => {
       unsubscribeRudra();
       unsubscribeChanter();
       unsubscribeBreak();
       unsubscribeChanting();
+      unsubscribeLeave();
     };
   }, []);
 
@@ -76,7 +83,7 @@ export default function LiveCountPage() {
   }
 
   const leaveRudra = async () => {
-    if (!joined) return;
+    if (!joined || !leaveEnabled) return;
     setJoined(false);
 
     const chanterRef = ref(db, "counters/chanterCount");
@@ -138,7 +145,9 @@ export default function LiveCountPage() {
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">Live Rudra Counter</h1>
-          <p className="mt-2 text-slate-600">View current number of chanters in the session and the current Rudra count</p>
+          <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications. Closing this tab while staying signed in will not disconnect you from the live 
+            rudra.
+          </p>
         </header>
 
         <section className="bg-white rounded-lg shadow p-8 text-center">
@@ -161,18 +170,18 @@ export default function LiveCountPage() {
             >
               {joined ? "You are connected" : "Join Rudra"}
             </button>
-
+            {leaveEnabled ? (
             <button
               onClick={leaveRudra}
               className={`px-6 py-2 rounded-lg border ${(chantingInProgress) ? "border-amber-300 text-amber-300 cursor-default" : "border-amber-600 text-amber-600 hover:bg-amber-50"}`}
               disabled={!joined || chantingInProgress}
             >
               Leave
-            </button>
+            </button>) : <></>}
           </div>
         </section>
         <br style={{ marginBottom: 8 }} />
-        <div className="text-sm text-slate-500 text-center">Please note that you may only leave or join the session once the current session is over.</div>
+        <div className="text-sm text-slate-500 text-center">Please contact a member of the technical support team (Ravi Balasubramanya or Aaditya Murthy) if a break is required.</div>
         <br style={{ marginBottom: 8 }} />
         <section className="bg-white bg-center rounded-lg shadow p-6">
           <div className="mt-6 flex justify-center gap-2">
@@ -182,18 +191,42 @@ export default function LiveCountPage() {
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">09:12</div>
-              <div className="text-xs text-slate-500">Current Session Elapsed Time</div>
+              <div className="text-xs text-slate-500">Ekadasha Parayana Elapsed Time</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{1331 - rudraCount}</div>
               <div className="text-xs text-slate-500">Rudras remaining</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{rudraCount ? "-" : "-"}</div>
+              <div className="text-xs text-slate-500">Previous Rudra Duration</div>
             </div>
           </div>
         </section>
         <br style={{ marginBottom: 8 }} />
         {MASTER_UIDS.includes(uid) ? (
           <section className="bg-white bg-center rounded-lg shadow p-6 text-center">
-            <h3>Master Controls</h3>
+            <h3>Chanting Controls</h3>
+            <div className="mt-6 flex justify-center gap-2">
+              <button
+                onClick={chantingSwitch}
+                className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700"
+              >
+                Start/Stop Chanting
+              </button>
+              <button
+                onClick={startBreak}
+                className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700"
+                disabled={chantingInProgress}
+              >
+                Start Break Timer
+              </button>
+            </div>
+          </section>) : <></>}
+        {MASTER_UIDS.includes(uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
+        {MASTER_UIDS.includes(uid) ? (
+          <section className="bg-white bg-center rounded-lg shadow p-6 text-center">
+            <h3>Leave Controls</h3>
             <div className="mt-6 flex justify-center gap-2">
               <button
                 onClick={chantingSwitch}
