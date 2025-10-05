@@ -76,7 +76,7 @@ export default function MahaRudraEvent({
     { name: "Nikhil Kashyap", role: "Religious Committee" },
     { name: "Ravi Balasubramanya", role: "Religious Committee" },
     { name: "Shailendra Upadhye", role: "Religious Committee" },
-    { name: "Aaditya Murthy", role: "Religious Committee and Vipra Vrinda Youth Leader" },
+    { name: "Aaditya Murthy", role: "Vipra Vrinda Youth Committee Leader" },
   ];
 
   const testimonials = [
