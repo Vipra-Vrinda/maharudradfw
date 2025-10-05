@@ -37,6 +37,7 @@ export default function LiveCountPage() {
     const breakRef = ref(db, "breakTimer");
     const chantingInProgressRef = ref(db, "chanting");
     const leaveEnabledRef = ref(db, "sessions/" + uid + "/leaveEnabled");
+    const joinedRef = ref(db, "sessions/" + uid + "/joined");
 
     // Listen for changes
     const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
@@ -59,12 +60,17 @@ export default function LiveCountPage() {
       enableLeave(snapshot.val() || false);
     });
 
+    const unsubscribeJoined = onValue(joinedRef, (snapshot) => {
+      setJoined(snapshot.val() || false);
+    });
+
     return () => {
       unsubscribeRudra();
       unsubscribeChanter();
       unsubscribeBreak();
       unsubscribeChanting();
       unsubscribeLeave();
+      unsubscribeJoined();
     };
   }, []);
 
@@ -72,8 +78,12 @@ export default function LiveCountPage() {
     if (joined) return;
     setJoined(true);
     const chanterRef = ref(db, "counters/chanterCount");
-
+    const joinedRef = ref(db, "sessions/" + uid + "/joined");
     try {
+      await runTransaction(joinedRef, () => {
+        return true; // increment
+      });
+
       await runTransaction(chanterRef, (currentValue) => {
         return (currentValue || 0) + 1; // increment
       });
@@ -84,10 +94,12 @@ export default function LiveCountPage() {
 
   const leaveRudra = async () => {
     if (!joined || !leaveEnabled) return;
-    setJoined(false);
-
+    const joinedRef = ref(db, "sessions/" + uid + "/joined");
     const chanterRef = ref(db, "counters/chanterCount");
     try {
+      await runTransaction(chanterRef, () => {
+        return false; // increment
+      });
       await runTransaction(chanterRef, (currentValue) => {
         return (currentValue || 0) - 1; // decrement
       });
