@@ -72,16 +72,16 @@ export default function MahaRudraEvent({
   const priests = [
     { name: "Gopalkrishna Bhatt", role: "Priest" },
     { name: "Ravi Vardhan", role: "Priest" },
-    { name: "Subramanya Kashyap", role: "Religious Committee" },
-    { name: "Nikhil Kashyap", role: "Religious Committee" },
-    { name: "Ravi Balasubramanya", role: "Religious Committee" },
-    { name: "Shailendra Upadhye", role: "Religious Committee" },
+    { name: "Subramanya Kashyap", role: "Religious Committee Member" },
+    { name: "Nikhil Kashyap", role: "Religious Committee Member" },
+    { name: "Ravi Balasubramanya", role: "Religious Committee Member" },
+    { name: "Shailendra Upadhye", role: "Religious Committee Member" },
     { name: "Aaditya Murthy", role: "Vipra Vrinda Youth Committee Leader" },
   ];
 
   const testimonials = [
     {
-      name: "Sreenivasa \"Govinda\" Rao", role: "MahaRudra Religious Committee", text: "I do not know what we have done in this life or in the previous lives or in the lives of our fathers and ancestors that we have the rare opportunity to put together an event like MahaRudra Yagna. I am even more grateful and thankful for everybody that is working so hard to make this an amazing event. What does this Yagna mean? What will it do for us ? Why us? These are the questions we all tend to get closer to this date.Here is how I see it - Bodhayana in his treatise on Rudram and Chamakam says - \"Na A Rudro Rudram Archayet\" This has been my go - to statement since we even conceived this event.What he says is - You have to become Rudra to worship Rudra! Om Tat Sat! Jai Shankara Shamboh!! 🙏🏼",
+      name: "Sreenivasa Ram", role: "Religious Committee Member", text: "I do not know what we have done in this life or in the previous lives or in the lives of our fathers and ancestors that we have the rare opportunity to put together an event like MahaRudra Yagna. I am even more grateful and thankful for everybody that is working so hard to make this an amazing event. What does this Yagna mean? What will it do for us ? Why us? These are the questions we all tend to get closer to this date.Here is how I see it - Bodhayana in his treatise on Rudram and Chamakam says - \"Na A Rudro Rudram Archayet\" This has been my go - to statement since we even conceived this event.What he says is - You have to become Rudra to worship Rudra! Om Tat Sat! Jai Shankara Shamboh!! 🙏🏼",
     },
   ];
 
@@ -223,17 +223,24 @@ export default function MahaRudraEvent({
           <aside className="space-y-4">
             <div className="rounded-lg bg-white p-4 shadow-sm">
               <h3 className="font-semibold">Statistics</h3>
-              <ul className="mt-2 text-sm text-slate-600 space-y-2">
-                {priests.map((s) => (
-                  <li key={s.name} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-semibold">{s.name.split(" ")[0][0]}</div>
-                    <div>
-                      <div className="font-medium">{s.name}</div>
-                      <div className="text-xs text-slate-500">{s.role}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-6 grid grid-cols-4 sm:grid-cols-8 gap-2">
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">{cd.days}</div>
+                  <div className="text-xs text-slate-500">Days</div>
+                </div>
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">{cd.hours}</div>
+                  <div className="text-xs text-slate-500">Hours</div>
+                </div>
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">{cd.minutes}</div>
+                  <div className="text-xs text-slate-500">Minutes</div>
+                </div>
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">{cd.seconds}</div>
+                  <div className="text-xs text-slate-500">Seconds</div>
+                </div>
+              </div>
             </div>
           </aside>
         </section>
