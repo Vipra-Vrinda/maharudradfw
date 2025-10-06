@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { signInWithEmailAndPassword} from "firebase/auth";
-import { ref, set } from "firebase/database";
 
 export default function LoginPage() {
   const { user, loading, uid } = useAuth();
@@ -27,13 +26,6 @@ export default function LoginPage() {
     return "";
   }
 
-  async function registerSession(userCredential) {
-    const sessionId = crypto.randomUUID();
-    await set(ref(db, `sessions/${userCredential.user.uid}/sessionId`), sessionId);
-    localStorage.setItem("sessionId", sessionId); // store locally to validate later
-    return sessionId;
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -46,14 +38,12 @@ export default function LoginPage() {
 
     // validate with firebase Auth, if success, set loading to false, and redirect
     signInWithEmailAndPassword(auth, username + "@maharudradfw.org", password + "Gotra")
-      .then(userCredential => {
+      .then(async (userCredential) => {
         // Signed in 
         setSuccess(true);
-        // ...
-        registerSession(userCredential);
         router.push("/livecount"); // redirect to livecount
       })
-      .catch((error) => {
+      .catch(() => {
         setError("Incorrect Login Credentials. Refer to registration desk for correct spellings of gotras. If issues persist, please contact technical support team.");
       });
   }

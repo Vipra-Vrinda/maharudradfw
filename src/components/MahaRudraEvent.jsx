@@ -121,9 +121,8 @@ export default function MahaRudraEvent({
             )}
             {(user != null) && (!loading) ? (
               <a
-                href="#testimonials"
                 className="text-sm hover:underline"
-                onClick={logout}
+                onClick={() => logout(user)}
               >
                 Sign Out
               </a>
@@ -182,7 +181,8 @@ export default function MahaRudraEvent({
             <div className="rounded-lg bg-white p-4 shadow-sm">
               <h3 className="font-semibold">Quick Info</h3>
               <ul className="mt-2 text-sm text-slate-600 space-y-1">
-                <li><strong>Ganesh Puja:</strong> 11:30 AM</li>
+                <li><strong>Ganesh Pooja:</strong> Friday October 10, 11:30 AM</li>
+                <li><strong>Guru Vandane:</strong> Saturday October 11, 7:00 AM</li>
                 <li><strong>Contact:</strong> vipravrindadallas@gmail.com </li>
               </ul>
             </div>
