@@ -9,7 +9,7 @@ import { db } from "@/lib/firebase"; // your initialized Firebase app
 
 
 export default function LiveCountPage() {
-  const { user, loading, uid } = useAuth();
+  const { user, loading } = useAuth();
   const [chanterCount, setNumChanters] = useState(0);
   const [rudraCount, setRudraCount] = useState(2);
   const [breakTimer, setBreakTimer] = useState(0);
@@ -36,8 +36,8 @@ export default function LiveCountPage() {
     const chanterRef = ref(db, "counters/chanterCount");
     const breakRef = ref(db, "breakTimer");
     const chantingInProgressRef = ref(db, "chanting");
-    const leaveEnabledRef = ref(db, "sessions/" + uid + "/leaveEnabled");
-    const joinedRef = ref(db, "sessions/" + uid + "/joined");
+    const leaveEnabledRef = ref(db, "sessions/" + user.uid + "/leaveEnabled");
+    const joinedRef = ref(db, "sessions/" + user.uid + "/joined");
 
     // Listen for changes
     const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
@@ -78,7 +78,7 @@ export default function LiveCountPage() {
     if (joined) return;
     setJoined(true);
     const chanterRef = ref(db, "counters/chanterCount");
-    const joinedRef = ref(db, "sessions/" + uid + "/joined");
+    const joinedRef = ref(db, "sessions/" + user.uid + "/joined");
     try {
       await runTransaction(joinedRef, () => {
         return true; // increment
@@ -94,7 +94,7 @@ export default function LiveCountPage() {
 
   const leaveRudra = async () => {
     if (!joined || !leaveEnabled) return;
-    const joinedRef = ref(db, "sessions/" + uid + "/joined");
+    const joinedRef = ref(db, `sessions/${user.uid}/sessionId`);
     const chanterRef = ref(db, "counters/chanterCount");
     try {
       await runTransaction(chanterRef, () => {
@@ -129,7 +129,7 @@ export default function LiveCountPage() {
   }
 
   const startBreak = async () => {
-    if (!MASTER_UIDS.includes(uid)) {
+    if (!MASTER_UIDS.includes(user.uid)) {
       return;
     }
     const breakRef = ref(db, "breakTimer");
@@ -216,7 +216,7 @@ export default function LiveCountPage() {
           </div>
         </section>
         <br style={{ marginBottom: 8 }} />
-        {MASTER_UIDS.includes(uid) ? (
+        {MASTER_UIDS.includes(user.uid) ? (
           <section className="bg-white bg-center rounded-lg shadow p-6 text-center">
             <h3>Chanting Controls</h3>
             <div className="mt-6 flex justify-center gap-2">
@@ -235,8 +235,8 @@ export default function LiveCountPage() {
               </button>
             </div>
           </section>) : <></>}
-        {MASTER_UIDS.includes(uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
-        {MASTER_UIDS.includes(uid) ? (
+        {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
+        {MASTER_UIDS.includes(user.uid) ? (
           <section className="bg-white bg-center rounded-lg shadow p-6 text-center">
             <h3>Leave Controls</h3>
             <div className="mt-6 flex justify-center gap-2">
@@ -255,7 +255,7 @@ export default function LiveCountPage() {
               </button>
             </div>
           </section>) : <></>}
-        {MASTER_UIDS.includes(uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
+        {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
         <div className="flex justify-center">
           <button
             onClick={() => { router.push("/") }}

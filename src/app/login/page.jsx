@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   async function registerSession(userCredential) {
     const sessionId = crypto.randomUUID();
-    await set(ref(db, `sessions/${userCredential.user.uid}`), sessionId);
+    await set(ref(db, `sessions/${userCredential.user.uid}/sessionId`), sessionId);
     localStorage.setItem("sessionId", sessionId); // store locally to validate later
     return sessionId;
   }
@@ -46,7 +46,7 @@ export default function LoginPage() {
 
     // validate with firebase Auth, if success, set loading to false, and redirect
     signInWithEmailAndPassword(auth, username + "@maharudradfw.org", password + "Gotra")
-      .then((userCredential) => {
+      .then(userCredential => {
         // Signed in 
         setSuccess(true);
         // ...
