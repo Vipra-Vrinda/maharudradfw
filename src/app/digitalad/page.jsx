@@ -9,6 +9,14 @@ const images = [
   "/images/Slide2.png",
 ];
 
+const sponsors = [
+  "Smt and Sri. Lavanya, Chetan and the Waterfront family Dentistry family",
+  "Smt and Sri. Roopa, Satyaprakash and family",
+  "Smt and Sri. Savitha, Dhruv and family",
+  "Smt and Sri. Nagashree, Srinivas and family",
+  "Smt and Sri. Poornima, Subanna and family",
+]
+
 export default function SlideshowBackground() {
   const [current, setCurrent] = useState(0);
   const [rudraCount, setRudraCount] = useState(0);
@@ -16,7 +24,7 @@ export default function SlideshowBackground() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length);
-    }, 5000); // change every 5 seconds
+    }, 7000); // change every 5 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -39,14 +47,15 @@ export default function SlideshowBackground() {
           key={index}
           src={src}
           alt=""
-          className={`absolute w-full h-full object-cover transition-opacity duration-1000 ${
-            index === current ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute w-full h-full object-cover transition-opacity duration-1000 ${index === current ? "opacity-100" : "opacity-0"
+            }`}
         />
       ))}
 
       {/* Optional overlay content */}
-      <div className="absolute inset-20 flex items-end justify-center text-purple-900 text-4xl font-bold drop-shadow-lg">
+      <div
+        className={"absolute inset-20 flex items-end justify-center text-purple-900 text-4xl font-bold drop-shadow-lg"}
+      >
         {rudraCount} Rudras Chanted
       </div>
     </div>

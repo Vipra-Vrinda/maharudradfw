@@ -28,7 +28,7 @@ export default function LiveCountPage() {
     "DmxX6SWOSBP9Y1kKvZWu15KcNTt2",
   ]
   const USER_NAMES = {
-    OXSK1l4Nu0dGAN2cp9cZeQNrlwJ3: "Brahmana Murthy",
+    OXSK1l4Nu0dGAN2cp9cZeQNrlwJ3: "Vedic Chanter",
     DmxX6SWOSBP9Y1kKvZWu15KcNTt2: "Aaditya Murthy"
   }
   useEffect(() => {
@@ -139,6 +139,8 @@ export default function LiveCountPage() {
     const joinedRef = ref(db, `sessions/${user.uid}/joined`);
     const leaveEnabledRef = ref(db, `sessions/${user.uid}/leaveEnabled`);
     const chanterRef = ref(db, "counters/chanterCount");
+    const scheduledBreaksRef = ref(db, `scheduledBreaks`);
+
     try {
       await runTransaction(joinedRef, () => {
         return false; // increment
@@ -148,6 +150,9 @@ export default function LiveCountPage() {
       });
       await runTransaction(leaveEnabledRef, (currentValue) => {
         return false; // leave disabled
+      });
+      await runTransaction(scheduledBreaksRef, (currentValue) => {
+        return currentValue - 1; // leave disabled
       });
     } catch (err) {
       console.error("Failed to increment count:", err);
@@ -160,13 +165,11 @@ export default function LiveCountPage() {
     }
     const chantingRef = ref(db, "chanting");
     const rudraRef = ref(db, "counters/rudraCount");
-    const scheduledBreaksRef = ref(db, `scheduledBreaks`);
     try {
       if (chantingInProgress) {
         await runTransaction(rudraRef, (currentValue) => {
           return currentValue + chanterCount;
         });
-        await set(scheduledBreaksRef, 0);
       }
       await runTransaction(chantingRef, (currentValue) => {
         return !currentValue; // flip
@@ -264,13 +267,13 @@ export default function LiveCountPage() {
           <section className="bg-white rounded-lg shadow p-8 text-left">
             <div className="text-sm text-slate-500 underline text-center">Etiquette</div>
             <ol className="text-sm text-slate-500 list-decimal pl-5">
-              <li>Breaks are granted on a case-by-case basis. Please do not misuse it.</li>
-              <li>Once the current round of rudra stops, a 45s break timer will start. You must click the leave button within this time.</li>
+              <li>Breaks are granted on a case-by-case basis based on urgency. Please use them only when required.</li>
+              <li>Once each round of rudra stops, a 45s break timer will start. You may choose to break then...or you can continue chanting and break during the break time.</li>
               <li>Once you have finished your break, you must re-click the join button when that round of rudra finishes and the 45s break timer starts.</li>
               <li>After leaving, the leave option will disappear. Any future breaks will require another approval from a moderator</li>
             </ol>
           </section>)
-          : (<div className="text-sm text-slate-500 text-center">Please contact Ravi Balasubramanya or Aaditya Murthy well before the current rudra ends if a break is required.</div>)}
+          : (<div className="text-sm text-slate-500 text-center">Please contact a moderator (Ravi Balasubramanya or Aaditya Murthy) if a break is required.</div>)}
         <br style={{ marginBottom: 8 }} />
         <section className="bg-white bg-center rounded-lg shadow p-6">
           <div className="mt-6 flex justify-center gap-2">
@@ -328,8 +331,8 @@ export default function LiveCountPage() {
                       >
                         Enable leave for {USER_NAMES[uid]}
                       </button>
-                      <div class="flex items-center gap-2">
-                        {("leaveEnabled" in session && session.leaveEnabled) ? <span className="h-3 w-3 rounded-full bg-green-500"></span> : <span class="h-3 w-3 rounded-full bg-red-500"></span>}
+                      <div className="flex items-center gap-2">
+                        {("leaveEnabled" in session && session.leaveEnabled) ? <span className="h-3 w-3 rounded-full bg-green-500"></span> : <span className="h-3 w-3 rounded-full bg-red-500"></span>}
                       </div>
                     </div>
                   </li>
