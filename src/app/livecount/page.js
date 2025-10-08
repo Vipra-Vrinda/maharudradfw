@@ -66,10 +66,6 @@ export default function LiveCountPage() {
                 <div className="text-2xl font-semibold text-red-500">{daysRemaining()}</div>
                 <div className="text-xs text-slate-500">Days Remaining</div>
               </div>
-              <div className="p-3 bg-amber-50 rounded">
-                <div className="text-2xl font-semibold text-red-500">{100000 - count}</div>
-                <div className="text-xs text-slate-500">Japa Remaining</div>
-              </div>
             </div>
           </div>
         </section>
