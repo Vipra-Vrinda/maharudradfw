@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { ref, onValue, runTransaction, set, get } from "firebase/database";
 import { db } from "@/lib/firebase"; // your initialized Firebase app
+import chanters from "@/data/chanters.json";
 
 
 export default function LiveCountPage() {
@@ -26,14 +27,13 @@ export default function LiveCountPage() {
   const MASTER_UIDS = [
     "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
   ]
-  const USER_NAMES = {
-    JXG9CSifc2gWRsfkzZInWRgV9fJ3: "Aaditya Murthy"
-  }
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
     }
   }, [user, loading, router]);
+
+  const { users } = chanters;
 
   const [now, setNow] = useState(new Date());
   useEffect(() => {
@@ -157,7 +157,7 @@ export default function LiveCountPage() {
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900 p-6">
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold">Namaskara, {USER_NAMES[user.uid]}</h1>
+          <h1 className="text-4xl font-bold">Namaskara, {users[user.uid]}</h1>
           <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications. Putting your device in airplane mode while keeping WiFi enabled will prolong battery life of your device.
           </p>
           <p className="mt-2 text-slate-600">Closing this tab or even turning off your phone while "joined" in the live rudra will not disconnect you from the session.</p>

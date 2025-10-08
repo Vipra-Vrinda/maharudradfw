@@ -6,6 +6,10 @@ import { useAuth } from "@/context/AuthContext";
 import { Menu, X } from "lucide-react";
 import { ref, onValue } from "firebase/database";
 import { db } from "@/lib/firebase"; // your initialized Firebase app
+import schedule1 from "@/data/day1_schedule.json"
+import schedule2 from "@/data/day2_schedule.json"
+import pv from "@/data/priests_volunteers.json"
+import tls from "@/data/testimonials.json"
 
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
@@ -20,6 +24,10 @@ export default function MahaRudraEvent({
   heroImage = "https://yogaeastwest.com/wp-content/uploads/2024/10/pexels-rajjatbayas-5935662-scaled.jpg.webp",
   youtubeChannelId = "UCNhX3E23NrZ2pOfFYdWP_Vg",
 }) {
+  const { day1_schedule } = schedule1;
+  const { day2_schedule } = schedule2;
+  const { priests } = pv;
+  const { testimonials } = tls;
   const eventDate = new Date(date + " " + startTime);
   const { user, loading, logout } = useAuth();
   const [now, setNow] = useState(new Date());
@@ -52,54 +60,6 @@ export default function MahaRudraEvent({
 
   const cd = countdownParts();
 
-  const day1_schedule = [
-    { time: startTime, title: "Inauguration and Ganesh Pooje" },
-    { time: "11:40 AM", title: "Punyaha and Pancha Gavya" },
-    { time: "12:20 PM", title: "Raksha Bandana" },
-    { time: "12:30 PM", title: "Go Pooje" },
-    { time: "12:40 PM", title: "Ruthwik Varuna" },
-    { time: "12:50 PM", title: "Kalasha Staphane" },
-    { time: "1:00 PM", title: "Mahanyasa Parayana" },
-    { time: "2:00 PM", title: "Volunteer Lunch" },
-    { time: "2:40 PM", title: "Rudra Parayana Kartha Vasthra Samarpane" },
-    { time: "3:00 PM", title: "Guru Vandana" },
-    { time: "3:10 PM", title: "Maha Sankalpa" },
-    { time: "3:30 PM", title: "Rudra Parayana Ekadasha I" },
-    { time: "6:00 PM", title: "Break" },
-    { time: "6:15 PM", title: "Rudra Parayana Ekadasha II & Abhisheka" },
-    { time: "8:45 PM", title: "Maha Mangalarathi" },
-    { time: "9:30 PM", title: "Palahaara - Ruthwik Bhojana" },
-  ];
-
-  const day2_schedule = [
-    { time: "7:00 AM", title: "Guru Vandane" },
-    { time: "7:10 AM", title: "Ganesha Pooje" },
-    { time: "7:20 AM", title: "Laghunyasa" },
-    { time: "7:35 AM", title: "Rudra Parayana Ekadasha III & Abhisheka" },
-    { time: "10:15 AM", title: "Break" },
-    { time: "10:45 AM", title: "Utsava" },
-    { time: "11:00 AM", title: "Homa and Punahuthi" },
-    { time: "1:00 PM", title: "Astavadhana Pooje" },
-    { time: "1:30 PM", title: "Maha Mangalarathi" },
-    { time: "2:00 PM", title: "Prasada" },
-  ];
-
-  const priests = [
-    { name: "Gopalkrishna Bhatt", role: "Priest" },
-    { name: "Ravi Vardhan", role: "Priest" },
-    { name: "Subramanya Kashyap", role: "Religious Committee Member" },
-    { name: "Nikhil Kashyap", role: "Religious Committee Member" },
-    { name: "Ravi Balasubramanya", role: "Religious Committee Member" },
-    { name: "Shailendra Upadhye", role: "Religious Committee Member" },
-    { name: "Aaditya Murthy", role: "Vipra Vrinda Youth Committee Leader" },
-  ];
-
-  const testimonials = [
-    {
-      name: "Sreenivasa Ram", role: "Religious Committee Member", text: "I do not know what we have done in this life or in the previous lives or in the lives of our fathers and ancestors that we have the rare opportunity to put together an event like MahaRudra Yagna. I am even more grateful and thankful for everybody that is working so hard to make this an amazing event. What does this Yagna mean? What will it do for us ? Why us? These are the questions we all tend to get closer to this date.Here is how I see it - Bodhayana in his treatise on Rudram and Chamakam says - \"Na A Rudro Rudram Archayet\" This has been my go - to statement since we even conceived this event.What he says is - You have to become Rudra to worship Rudra! Om Tat Sat! Jai Shankara Shamboh!! 🙏🏼",
-    },
-  ];
-
   const [menuOpen, setMenuOpen] = useState(false);
 
   if (loading) return <p>Loading...</p>;
@@ -109,7 +69,7 @@ export default function MahaRudraEvent({
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <a href="https://www.vipravrinda.org">
-              <img src="/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
+              <img src="/maharudradfw/favicon.ico" alt="logo" className="w-10 h-10 rounded" />
             </a>
             <div>
               <h1 className="text-lg font-semibold">{title}</h1>
