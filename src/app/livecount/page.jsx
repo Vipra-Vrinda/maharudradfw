@@ -12,24 +12,22 @@ export default function LiveCountPage() {
   const { user, loading } = useAuth();
   const [chanterCount, setNumChanters] = useState(0);
   const [rudraCount, setRudraCount] = useState(2);
-  const [breakTimer, setBreakTimer] = useState(0);
-  const [scheduledBreaks, setScheduledBreaks] = useState(0);
-  const [chanterCountLoading, setChanterCountLoading] = useState(false);
-  const [rudraCountLoading, setRudraCountLoading] = useState(false);
-  const [leaveEnabled, enableLeave] = useState(false);
+  const [chanterCountLoading, setChanterCountLoading] = useState(true);
+  const [rudraCountLoading, setRudraCountLoading] = useState(true);
+  const [ekadashaStart, setEkadashaStart] = useState(0);
+  const [rudraStart, setRudraStart] = useState(0);
   const [joined, setJoined] = useState(false);
   const [chantingInProgress, setChantingInProgress] = useState(false);
-  const [sessions, setSessions] = useState({});
+  const [adminMessage, setAdminMessage] = useState("");
   const router = useRouter();
   const intervalRef = useRef(null);
   const BREAK_TIME = 45;
   const POLL_MS = 2000;
   const MASTER_UIDS = [
-    "DmxX6SWOSBP9Y1kKvZWu15KcNTt2",
+    "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
   ]
   const USER_NAMES = {
-    OXSK1l4Nu0dGAN2cp9cZeQNrlwJ3: "Vedic Chanter",
-    DmxX6SWOSBP9Y1kKvZWu15KcNTt2: "Aaditya Murthy"
+    JXG9CSifc2gWRsfkzZInWRgV9fJ3: "Aaditya Murthy"
   }
   useEffect(() => {
     if (!loading && !user) {
@@ -37,62 +35,49 @@ export default function LiveCountPage() {
     }
   }, [user, loading, router]);
 
+  const [now, setNow] = useState(new Date());
   useEffect(() => {
-    if (!user || !MASTER_UIDS.includes(user.uid)) {
-      return;
-    }
-    const sessionsRef = ref(db, "sessions");
-    const breakRef = ref(db, "scheduledBreaks");
-    const unsubscribeSessions = onValue(sessionsRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setSessions(snapshot.val());
-      } else {
-        setSessions({});
-      }
-    });
-    const unsubscribeBreaks = onValue(breakRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setScheduledBreaks(snapshot.val());
-      } else {
-        setScheduledBreaks({});
-      }
-    });
-
-    // cleanup
-    return () => {
-      unsubscribeSessions();
-      unsubscribeBreaks();
-    }
-  }, [user]);
+    const t = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   useEffect(() => {
     const rudraRef = ref(db, "counters/rudraCount");
     const chanterRef = ref(db, "counters/chanterCount");
-    const breakRef = ref(db, "breakTimer");
     const chantingInProgressRef = ref(db, "chanting");
+    const ekadashaRef = ref(db, "timestamps/ekadashaStart");
+    const rudraTimeRef = ref(db, "timestamps/rudraStart");
+
 
     // Listen for changes
     const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
       setRudraCount(snapshot.val() || 0);
+      setRudraCountLoading(false);
     });
 
     const unsubscribeChanter = onValue(chanterRef, (snapshot) => {
       setNumChanters(snapshot.val() || 0);
-    });
-
-    const unsubscribeBreak = onValue(breakRef, (snapshot) => {
-      setBreakTimer(snapshot.val() || 0);
+      setChanterCountLoading(false);
     });
 
     const unsubscribeChanting = onValue(chantingInProgressRef, (snapshot) => {
       setChantingInProgress(snapshot.val() || false);
     });
 
+    const unsubscribeEkadasha = onValue(ekadashaRef, (snapshot) => {
+      setEkadashaStart(snapshot.val() || 0);
+    });
+
+    const unsubscribeRudraStart = onValue(rudraTimeRef, (snapshot) => {
+      setRudraStart(snapshot.val() || 0);
+    });
+
     return () => {
       unsubscribeRudra();
       unsubscribeChanter();
-      unsubscribeBreak();
       unsubscribeChanting();
+      unsubscribeEkadasha();
+      unsubscribeRudraStart();
     };
   }, []);
 
@@ -100,11 +85,6 @@ export default function LiveCountPage() {
     if (!user) return;
 
     const joinedRef = ref(db, `sessions/${user.uid}/joined`);
-    const leaveEnabledRef = ref(db, `sessions/${user.uid}/leaveEnabled`);
-
-    const unsubscribeLeave = onValue(leaveEnabledRef, (snapshot) => {
-      enableLeave(snapshot.exists() ? snapshot.val() : false);
-    });
 
     const unsubscribeJoined = onValue(joinedRef, (snapshot) => {
       setJoined(snapshot.exists() ? snapshot.val() : false);
@@ -112,10 +92,19 @@ export default function LiveCountPage() {
 
     // attach listeners here...
     return () => {
-      unsubscribeLeave();
       unsubscribeJoined();
     };
   }, [user]);
+
+  function ekadashaElapsedTime() {
+    const diff = now - ekadashaStart;
+    const secs = Math.floor(diff / 1000);
+    const hours = Math.floor((secs % (24 * 3600)) / 3600);
+    const minutes = Math.floor((secs % 3600) / 60);
+    const seconds = secs % 60;
+    return { hours, minutes, seconds };
+  }
+  const et = ekadashaElapsedTime();
 
   const joinRudra = async () => {
     if (joined) return;
@@ -134,92 +123,34 @@ export default function LiveCountPage() {
     }
   }
 
-  const leaveRudra = async () => {
-    if (!joined || !leaveEnabled) return;
-    const joinedRef = ref(db, `sessions/${user.uid}/joined`);
-    const leaveEnabledRef = ref(db, `sessions/${user.uid}/leaveEnabled`);
-    const chanterRef = ref(db, "counters/chanterCount");
-    const scheduledBreaksRef = ref(db, `scheduledBreaks`);
-
+  const startChanting = async () => {
+    if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) {
+      return;
+    }
+    const chantingRef = ref(db, "chanting");
     try {
-      await runTransaction(joinedRef, () => {
-        return false; // increment
-      });
-      await runTransaction(chanterRef, (currentValue) => {
-        return (currentValue || 0) - 1; // decrement
-      });
-      await runTransaction(leaveEnabledRef, (currentValue) => {
-        return false; // leave disabled
-      });
-      await runTransaction(scheduledBreaksRef, (currentValue) => {
-        return currentValue - 1; // leave disabled
-      });
+      await set(chantingRef, true);
     } catch (err) {
-      console.error("Failed to increment count:", err);
+      console.error("Failed to start/stop chanting", err);
     }
   }
 
-  const chantingSwitch = async () => {
-    if (!MASTER_UIDS.includes(user.uid)) {
+  const stopChanting = async () => {
+    if (!MASTER_UIDS.includes(user.uid) || !chantingInProgress) {
       return;
     }
     const chantingRef = ref(db, "chanting");
     const rudraRef = ref(db, "counters/rudraCount");
     try {
-      if (chantingInProgress) {
         await runTransaction(rudraRef, (currentValue) => {
           return currentValue + chanterCount;
         });
-      }
-      await runTransaction(chantingRef, (currentValue) => {
-        return !currentValue; // flip
-      });
+        await set(chantingRef, true);
     } catch (err) {
       console.error("Failed to start/stop chanting", err);
     }
   }
 
-  const triggerEnableLeave = async (uid) => {
-    if (!MASTER_UIDS.includes(user.uid) || !chantingInProgress) {
-      return;
-    }
-    const enableLeaveRef = ref(db, `sessions/${uid}/leaveEnabled`);
-    const scheduledBreaksRef = ref(db, `scheduledBreaks`);
-    try {
-      const enabledLeave = await get(enableLeaveRef);
-      if (!enabledLeave.exists() || !enabledLeave.val()) {
-        await set(enableLeaveRef, true);
-        await runTransaction(scheduledBreaksRef, (currentValue) => {
-          return currentValue + 1; // increment
-        });
-      }
-    } catch (err) {
-      console.error("Failed to start/stop chanting", err);
-    }
-  }
-
-  const startBreak = async () => {
-    if (!MASTER_UIDS.includes(user.uid)) {
-      return;
-    }
-    const breakRef = ref(db, "breakTimer");
-    try {
-      await set(breakRef, 45);
-
-      const interval = setInterval(async () => {
-        await runTransaction(breakRef, (currentValue) => {
-          if (currentValue > 0) {
-            return currentValue - 1; // decrement
-          } else {
-            clearInterval(interval); // stop timer
-            return 0;
-          }
-        });
-      }, 1000);
-    } catch (err) {
-      console.error("Failed to start break timer", err);
-    }
-  }
   if (loading) return <p>Loading...</p>;
   if (!user) return null; // temporarily render nothing while redirecting
   return (
@@ -227,13 +158,13 @@ export default function LiveCountPage() {
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">Namaskara, {USER_NAMES[user.uid]}</h1>
-          <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications. Closing this tab while staying signed in will not disconnect you from the live
-            rudra.
+          <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications. Putting your device in airplane mode while keeping WiFi enabled will prolong battery life of your device.
           </p>
+          <p className="mt-2 text-slate-600">Closing this tab or even turning off your phone while "joined" in the live rudra will not disconnect you from the session.</p>
         </header>
 
         <section className="bg-white rounded-lg shadow p-8 text-center">
-          <div className="text-sm text-slate-500">{chantingInProgress ? "Chanting is in progress" : breakTimer ? "Chanting on break for " + breakTimer + "s" : "Chanting on break"}</div>
+          <div className="text-sm text-slate-500">{chantingInProgress ? "Chanting Namaka" : "Chanting Chamaka"}</div>
 
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
@@ -252,28 +183,8 @@ export default function LiveCountPage() {
             >
               {joined ? "You are connected" : "Join Rudra"}
             </button>
-            {leaveEnabled ? (
-              <button
-                onClick={leaveRudra}
-                className={`px-6 py-2 rounded-lg border ${(chantingInProgress) ? "border-amber-300 text-amber-300 cursor-default" : "border-amber-600 text-amber-600 hover:bg-amber-50"}`}
-                disabled={!joined || chantingInProgress}
-              >
-                Leave
-              </button>) : <></>}
           </div>
         </section>
-        <br style={{ marginBottom: 8 }} />
-        {leaveEnabled ? (
-          <section className="bg-white rounded-lg shadow p-8 text-left">
-            <div className="text-sm text-slate-500 underline text-center">Etiquette</div>
-            <ol className="text-sm text-slate-500 list-decimal pl-5">
-              <li>Breaks are granted on a case-by-case basis based on urgency. Please use them only when required.</li>
-              <li>Once each round of rudra stops, a 45s break timer will start. You may choose to break then...or you can continue chanting and break during the break time.</li>
-              <li>Once you have finished your break, you must re-click the join button when that round of rudra finishes and the 45s break timer starts.</li>
-              <li>After leaving, the leave option will disappear. Any future breaks will require another approval from a moderator</li>
-            </ol>
-          </section>)
-          : (<div className="text-sm text-slate-500 text-center">Please contact a moderator (Ravi Balasubramanya or Aaditya Murthy) if a break is required.</div>)}
         <br style={{ marginBottom: 8 }} />
         <section className="bg-white bg-center rounded-lg shadow p-6">
           <div className="mt-6 flex justify-center gap-2">
@@ -282,7 +193,7 @@ export default function LiveCountPage() {
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">-</div>
+              <div className="text-2xl font-semibold">{ekadashaStart ?  `${et.hours}:${et.minutes}:${et.seconds}` : "-"}</div>
               <div className="text-xs text-slate-500">Ekadasha Parayana Elapsed Time</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
@@ -291,7 +202,7 @@ export default function LiveCountPage() {
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{rudraCount ? "-" : "-"}</div>
-              <div className="text-xs text-slate-500">Previous Rudra Duration</div>
+              <div className="text-xs text-slate-500">Current Rudra Elapsed Time</div>
             </div>
           </div>
         </section>
@@ -301,46 +212,39 @@ export default function LiveCountPage() {
             <h3>Chanting Controls</h3>
             <div className="mt-6 flex justify-center gap-2">
               <button
-                onClick={chantingSwitch}
+                onClick={startChanting}
                 className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700"
               >
-                Start/Stop Chanting
+                Start Chanting
               </button>
               <button
-                onClick={startBreak}
+                onClick={stopChanting}
                 className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700"
-                disabled={chantingInProgress}
               >
-                Start Break Timer
+                Stop Chanting
               </button>
             </div>
           </section>) : <></>}
         {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
-        {MASTER_UIDS.includes(user.uid) ? (
+        {/* {MASTER_UIDS.includes(user.uid) ? (
           <section className="bg-white bg-center rounded-lg shadow p-6 text-center">
-            <h3>Leave Controls</h3>
-            <h2>Scheduled Breaks: {scheduledBreaks}</h2>
-            <ul>
-              {Object.entries(sessions).map(([uid, session]) =>
-                "joined" in session && session.joined ? (
-                  <li key={uid}>
-                    <div className="mt-6 flex justify-center gap-2">
-                      <button
-                        onClick={() => triggerEnableLeave(uid)}
-                        className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700"
-                      >
-                        Enable leave for {USER_NAMES[uid]}
-                      </button>
-                      <div className="flex items-center gap-2">
-                        {("leaveEnabled" in session && session.leaveEnabled) ? <span className="h-3 w-3 rounded-full bg-green-500"></span> : <span className="h-3 w-3 rounded-full bg-red-500"></span>}
-                      </div>
-                    </div>
-                  </li>
-                ) : null
-              )}
-            </ul>
+            <h3>Messaging Controls</h3>
+            <textarea
+              value={adminMessage}
+              onChange={(e) => setAdminMessage(e.target.value)}
+              placeholder="Type a message to broadcast..."
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
+              rows={3}
+            />
+
+            <button
+              onClick={sendBroadcastMessage}
+              className="mt-3 px-6 py-2 bg-amber-600 text-white rounded-lg shadow hover:bg-amber-700 transition"
+            >
+              Send Message
+            </button>
           </section>) : <></>}
-        {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
+        {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>} */}
         <div className="flex justify-center">
           <button
             onClick={() => { router.push("/") }}

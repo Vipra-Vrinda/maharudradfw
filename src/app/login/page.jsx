@@ -8,7 +8,7 @@ import { signInWithEmailAndPassword} from "firebase/auth";
 
 export default function LoginPage() {
   const { user, loading, uid } = useAuth();
-  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -21,7 +21,7 @@ export default function LoginPage() {
   }, [user, loading, router]);
 
   function validate() {
-    if (!username) return "Please enter your username.";
+    if (!phone) return "Please enter your phone number.";
     if (!password) return "Please enter your password.";
     return "";
   }
@@ -37,14 +37,14 @@ export default function LoginPage() {
     }
 
     // validate with firebase Auth, if success, set loading to false, and redirect
-    signInWithEmailAndPassword(auth, username + "@maharudradfw.org", password + "Gotra")
-      .then(async (userCredential) => {
+    signInWithEmailAndPassword(auth, phone + "@maharudradfw.org", password + "Gotra")
+      .then(async () => {
         // Signed in 
         setSuccess(true);
         router.push("/livecount"); // redirect to livecount
       })
       .catch(() => {
-        setError("Incorrect Login Credentials. Refer to registration desk for correct spellings of gotras. If issues persist, please contact technical support team.");
+        setError("Incorrect Login Credentials. Refer to registration desk for the password. If issues persist, please contact the technical support team.");
       });
   }
 
@@ -72,10 +72,10 @@ export default function LoginPage() {
               <input
                 id="username"
                 type="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
-                placeholder="Last name and first initial (Eg: kashyaps)"
+                placeholder="Your phone number registered with Vipra Vrinda"
                 autoComplete="username"
                 required
               />
@@ -91,7 +91,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
-                placeholder="Enter your gotra here (first letter capital)"
+                placeholder="Password (given by registration)"
                 autoComplete="current-password"
                 required
               />

@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
+import { Menu, X } from "lucide-react";
+import { ref, onValue } from "firebase/database";
+import { db } from "@/lib/firebase"; // your initialized Firebase app
 
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
@@ -23,6 +26,18 @@ export default function MahaRudraEvent({
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
+  }, []);
+
+  const [rudraCount, setRudraCount] = useState(0);
+  useEffect(() => {
+    const rudraRef = ref(db, "counters/rudraCount");
+
+    // Listen for changes
+    const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
+      setRudraCount(snapshot.val() || 0);
+    });
+
+    return () => unsubscribeRudra();
   }, []);
 
   function countdownParts() {
@@ -85,6 +100,8 @@ export default function MahaRudraEvent({
     },
   ];
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   if (loading) return <p>Loading...</p>;
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900">
@@ -99,7 +116,7 @@ export default function MahaRudraEvent({
               <p className="text-sm text-slate-600">{date} - {endDate} • {venue}</p>
             </div>
           </div>
-          <nav className="flex items-center gap-3">
+          <nav className="hidden sm:flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
@@ -128,7 +145,48 @@ export default function MahaRudraEvent({
               </a>
             ) : (<></>)}
           </nav>
+
+          <button
+            className="sm:hidden inline-flex items-center p-2 rounded-md text-slate-700 hover:bg-slate-100"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
+
+        {menuOpen && (
+          <div className="sm:hidden bg-white/95 backdrop-blur-sm shadow-md">
+            <nav className="flex flex-col gap-3 px-4 py-3">
+              <a href="#about" className="text-sm hover:underline">About</a>
+              <a href="#stream" className="text-sm hover:underline">Stream</a>
+              <a href="#schedule" className="text-sm hover:underline">Schedule</a>
+              <a href="#testimonials" className="text-sm hover:underline">Testimonials</a>
+              {(user != null) && (!loading) ? (
+                <a
+                  href="/livecount"
+                  className="inline-block self-start rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
+                >
+                  Join Live Rudra
+                </a>
+              ) : (
+                <a
+                  href="/login"
+                  className="inline-block self-start rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
+                >
+                  Login
+                </a>
+              )}
+              {(user != null) && (!loading) ? (
+                <a
+                  className="text-sm hover:underline"
+                  onClick={() => logout(user)}
+                >
+                  Sign Out
+                </a>
+              ) : (<></>)}
+            </nav>
+          </div>
+        )}
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-12">
@@ -223,22 +281,14 @@ export default function MahaRudraEvent({
           <aside className="space-y-4">
             <div className="rounded-lg bg-white p-4 shadow-sm">
               <h3 className="font-semibold">Statistics</h3>
-              <div className="mt-6 grid grid-cols-4 sm:grid-cols-8 gap-2">
+              <div className="mt-6 flex grid-cols-2 gap-2">
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.days}</div>
-                  <div className="text-xs text-slate-500">Days</div>
+                  <div className="text-2xl font-semibold">{rudraCount}</div>
+                  <div className="text-xs text-slate-500">Rudras Chanted</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.hours}</div>
-                  <div className="text-xs text-slate-500">Hours</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.minutes}</div>
-                  <div className="text-xs text-slate-500">Minutes</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.seconds}</div>
-                  <div className="text-xs text-slate-500">Seconds</div>
+                  <div className="text-2xl font-semibold">100,518</div>
+                  <div className="text-xs text-slate-500">Total Gayatri Japa Done</div>
                 </div>
               </div>
             </div>

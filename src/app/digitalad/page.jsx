@@ -54,7 +54,7 @@ export default function SlideshowBackground() {
 
       {/* Optional overlay content */}
       <div
-        className={"absolute inset-20 flex items-end justify-center text-purple-900 text-4xl font-bold drop-shadow-lg"}
+        className={"absolute inset-0 flex items-beginning justify-center text-purple-900 text-4xl font-bold drop-shadow-lg"}
       >
         {rudraCount} Rudras Chanted
       </div>
