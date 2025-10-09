@@ -17,6 +17,7 @@ export default function LiveCountPage() {
   const [rudraCountLoading, setRudraCountLoading] = useState(true);
   const [ekadashaStart, setEkadashaStart] = useState(0);
   const [rudraStart, setRudraStart] = useState(0);
+  const [rudraPrevDuration, setRudraPrevDuration] = useState(0);
   const [joined, setJoined] = useState(false);
   const [chantingInProgress, setChantingInProgress] = useState(false);
   const [adminMessage, setAdminMessage] = useState("");
@@ -45,6 +46,7 @@ export default function LiveCountPage() {
     const chantingInProgressRef = ref(db, "chanting");
     const ekadashaRef = ref(db, "timestamps/ekadashaStart");
     const rudraTimeRef = ref(db, "timestamps/rudraStart");
+    const rudraPrevDurationRef = ref(db, "previousRudraDuration");
 
 
     // Listen for changes
@@ -70,12 +72,17 @@ export default function LiveCountPage() {
       setRudraStart(snapshot.val() || 0);
     });
 
+    const unsubscribeRudraPrevDuration = onValue(rudraPrevDurationRef, (snapshot) => {
+      setRudraPrevDuration(snapshot.val() || 0);
+    });
+
     return () => {
       unsubscribeRudra();
       unsubscribeChanter();
       unsubscribeChanting();
       unsubscribeEkadasha();
       unsubscribeRudraStart();
+      unsubscribeRudraPrevDuration();
     };
   }, []);
 
@@ -113,6 +120,15 @@ export default function LiveCountPage() {
   }
   const rt = rudraElapsedTime();
 
+
+  function calcRudraPrevDuration() {
+    const secs = Math.floor(rudraPrevDuration / 1000);
+    const minutes = Math.floor((secs % 3600) / 60);
+    const seconds = secs % 60;
+    return { minutes, seconds };
+  }
+  const rd = calcRudraPrevDuration();
+
   const joinRudra = async () => {
     if (joined) return;
     const chanterRef = ref(db, "counters/chanterCount");
@@ -131,22 +147,24 @@ export default function LiveCountPage() {
   }
 
   const startChanting = async () => {
-    /* TODO: fix race conditions */
     if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) return;
   
-    const chantingRef = ref(db, "chanting");
-    const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
-    const rudraStartRef = ref(db, "timestamps/rudraStart");
+    const parentRef = ref(db);
     try {
       const currTime = Date.now();
-      await runTransaction(chantingRef, (currentValue) => {  
-        if (!currentValue) {
-          currentValue = true;
+      await runTransaction(parentRef, (root) => {  
+        if (!root) {
+          return root;
         }
-        return currentValue;
+        if (!root.chanting) {
+          if (!root.timestamps.ekadashaStart) {
+            root.timestamps.ekadashaStart = currTime;
+          }
+          root.timestamps.rudraStart = currTime;
+          root.chanting = true;
+        }
+        return root;
       });
-      if (!ekadashaStart) await set(ekadashaStartRef, currTime);
-      await set(rudraStartRef, currTime);
     } catch (err) {
       console.error("Failed to start chanting", err);
     }
@@ -156,19 +174,20 @@ export default function LiveCountPage() {
     if (!MASTER_UIDS.includes(user.uid) || !chantingInProgress) {
       return;
     }
-    const chantingRef = ref(db, "chanting");
-    const rudraRef = ref(db, "counters/rudraCount");
+    const parentRef = ref(db);
     try {
-      await runTransaction(chantingRef, (currentValue) => {
-        // Only stop if currently true
-        if (currentValue === true) {
-          // safely increment rudra inside the same transaction
-          runTransaction(rudraRef, (rudraCount) => {
-            return (rudraCount || 0) + chanterCount;
-          });
-          return false; // set chanting -> false
+      await runTransaction(parentRef, (root) => {
+        if (!root) {
+          return root;
         }
-        return currentValue; // no-op if already stopped
+        // Only stop if currently true
+        if (root.chanting) {
+          // safely increment rudra inside the same transaction
+          root.counters.rudraCount = rudraCount + chanterCount;
+          root.previousRudraDuration = Date.now() - rudraStart;
+          root.chanting = false; // set chanting -> false
+        }
+        return root; // no-op if already stopped
       });
     } catch (err) {
       console.error("Failed to stop chanting", err);
@@ -219,7 +238,7 @@ export default function LiveCountPage() {
               className={`px-6 py-2 rounded-lg font-medium ${(joined || chantingInProgress) ? "bg-amber-300 text-white cursor-default" : "bg-amber-600 text-white hover:bg-amber-700"}`}
               disabled={joined || chantingInProgress}
             >
-              {joined ? "You are connected" : "Join Rudra"}
+              {joined ? "You are connected" : "Join Chanting"}
             </button>
           </div>
         </section>
@@ -232,7 +251,7 @@ export default function LiveCountPage() {
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{ekadashaStart ?  `${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}` : "-"}</div>
-              <div className="text-xs text-slate-500">Ekadasha Parayana Elapsed Time</div>
+              <div className="text-xs text-slate-500">Ekadasha Elapsed Time</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{1331 - rudraCount}</div>
@@ -240,7 +259,11 @@ export default function LiveCountPage() {
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{rudraStart ? `${String(rt.minutes).padStart(2, "0")}:${String(rt.seconds).padStart(2, "0")}` : "-"}</div>
-              <div className="text-xs text-slate-500">Current Rudra Elapsed Time</div>
+              <div className="text-xs text-slate-500">Rudra Elapsed Time</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{rudraPrevDuration ? `${String(rd.minutes).padStart(2, "0")}:${String(rd.seconds).padStart(2, "0")}` : "-"}</div>
+              <div className="text-xs text-slate-500">Prev. Rudra Duration</div>
             </div>
           </div>
         </section>
