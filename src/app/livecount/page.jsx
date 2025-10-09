@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ref, onValue, runTransaction, set } from "firebase/database";
 import { db } from "@/lib/firebase"; // your initialized Firebase app
 import chanters from "@/data/chanters.json";
-
+import { useBroadcastListener } from "@/components/MahaRudraEvent";
 
 export default function LiveCountPage() {
   const { user, loading } = useAuth();
@@ -26,6 +26,9 @@ export default function LiveCountPage() {
   const MASTER_UIDS = [
     "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
   ]
+  const BROADCAST_UIDS = [
+    "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
+  ]
   useEffect(() => {
     if (!loading && !user) {
       router.push("/login");
@@ -33,6 +36,7 @@ export default function LiveCountPage() {
   }, [user, loading, router]);
 
   const { users } = chanters;
+  useBroadcastListener();
 
   const [now, setNow] = useState(new Date());
   useEffect(() => {
@@ -146,13 +150,26 @@ export default function LiveCountPage() {
     }
   }
 
+  async function sendBroadcastMessage() {
+    try {
+      const msgRef = ref(db, "broadcast");
+      await set(msgRef, {
+        message: adminMessage,
+        timestamp: Date.now(),
+      });
+      setAdminMessage("");
+    } catch (err) {
+      console.error("❌ Failed to send broadcast:", err);
+    }
+  }
+
   const startChanting = async () => {
     if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) return;
-  
+
     const parentRef = ref(db);
     try {
       const currTime = Date.now();
-      await runTransaction(parentRef, (root) => {  
+      await runTransaction(parentRef, (root) => {
         if (!root) {
           return root;
         }
@@ -197,7 +214,7 @@ export default function LiveCountPage() {
   const resetEkadasha = async () => {
     /* TODO: fix race conditions */
     if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) return;
-  
+
     const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
     const rudraStartRef = ref(db, "timestamps/rudraStart");
     try {
@@ -218,6 +235,15 @@ export default function LiveCountPage() {
           <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications. Putting your device in airplane mode while keeping WiFi enabled will prolong battery life of your device.
           </p>
           <p className="mt-2 text-slate-600">Closing this tab or even turning off your phone while "joined" in the live rudra will not disconnect you from the session.</p>
+          <br style={{ marginBottom: 8 }} />
+          <a
+            href="https://drive.google.com/drive/folders/1OpwrspwyLQgnqxZz1ZxXUutQ8Dyy7GT4?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700 inline-block"
+          >
+            View my Chanting Documents
+          </a>
         </header>
 
         <section className="bg-white rounded-lg shadow p-8 text-center">
@@ -250,7 +276,7 @@ export default function LiveCountPage() {
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{ekadashaStart ?  `${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}` : "-"}</div>
+              <div className="text-2xl font-semibold">{ekadashaStart ? `${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}` : "-"}</div>
               <div className="text-xs text-slate-500">Ekadasha Elapsed Time</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
@@ -293,7 +319,7 @@ export default function LiveCountPage() {
             </div>
           </section>) : <></>}
         {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
-        {/* {MASTER_UIDS.includes(user.uid) ? (
+        {BROADCAST_UIDS.includes(user.uid) ? (
           <section className="bg-white bg-center rounded-lg shadow p-6 text-center">
             <h3>Messaging Controls</h3>
             <textarea
@@ -305,13 +331,13 @@ export default function LiveCountPage() {
             />
 
             <button
-              onClick={sendBroadcastMessage}
+              onClick={(sendBroadcastMessage)}
               className="mt-3 px-6 py-2 bg-amber-600 text-white rounded-lg shadow hover:bg-amber-700 transition"
             >
               Send Message
             </button>
           </section>) : <></>}
-        {MASTER_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>} */}
+        {BROADCAST_UIDS.includes(user.uid) ? (<br style={{ marginBottom: 8 }} />) : <></>}
         <div className="flex justify-center">
           <button
             onClick={() => { router.push("/") }}
@@ -319,6 +345,6 @@ export default function LiveCountPage() {
           >Back to MahaRudra Dashboard</button>
         </div>
       </main>
-    </div>
+    </div >
   );
 }

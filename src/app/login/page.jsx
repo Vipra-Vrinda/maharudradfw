@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
-import { signInWithEmailAndPassword} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginPage() {
   const { user, loading, uid } = useAuth();
@@ -53,7 +53,7 @@ export default function LoginPage() {
       <main className="w-full max-w-md">
         <header className="mb-6 text-center">
           <h1 className="text-3xl font-bold">Sign in to MahaRudra</h1>
-          <p className="mt-2 text-slate-600 text-sm">Access your Mahā Rudra chanting experience to join live rudra.</p>
+          <p className="mt-2 text-slate-600 text-sm">Access your Mahā Rudra chanting experience to join live chanting.</p>
         </header>
 
         <section className="bg-white rounded-lg shadow p-6">
@@ -67,16 +67,18 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-                Username
+                Phone # used to register for MahaRudra
               </label>
               <input
-                id="username"
-                type="username"
+                id="phone"
+                type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-slate-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
-                placeholder="Your phone number registered with Vipra Vrinda"
-                autoComplete="username"
+                placeholder="Enter phone number (digits only)"
+                autoComplete="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
                 required
               />
             </div>

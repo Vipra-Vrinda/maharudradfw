@@ -15,6 +15,37 @@ import tls from "@/data/testimonials.json"
 // Single-file React component (Tailwind CSS required in the host project)
 // Usage: drop into a React app, ensure Tailwind is configured.
 
+export function useBroadcastListener() {
+  useEffect(() => {
+    const broadcastRef = ref(db, "broadcast");
+
+    const unsubscribe = onValue(broadcastRef, (snapshot) => {
+      if (!snapshot.exists()) return;
+      const data = snapshot.val();
+      if (!data.message || !data.timestamp) {
+        return;
+      }
+      // Show a browser notification
+
+      // check localStorage if already shown
+      const lastSeen = localStorage.getItem("lastBroadcastSeen");
+      if (lastSeen !== String(data.timestamp)) {
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("📢 Announcement", {
+            body: `${data.message}`,
+          });
+        } else {
+          // fallback if notifications are blocked
+          alert(`📢 ${data.message}`);
+        }
+        localStorage.setItem("lastBroadcastSeen", String(data.timestamp));
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+}
+
 export default function MahaRudraEvent({
   title = "Mahā Rudra DFW",
   date = "October 10, 2025",
@@ -47,6 +78,7 @@ export default function MahaRudraEvent({
 
     return () => unsubscribeRudra();
   }, []);
+  useBroadcastListener();
 
   function countdownParts() {
     const diff = Math.max(0, eventDate - now);
