@@ -28,6 +28,7 @@ export default function LiveCountPage() {
   ]
   const BROADCAST_UIDS = [
     "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
+    "dtOXElUzMFfRUhxLxrST3HkiaUF2"
   ]
   useEffect(() => {
     if (!loading && !user) {
