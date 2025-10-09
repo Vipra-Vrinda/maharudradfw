@@ -4,7 +4,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { ref, onValue, runTransaction, set, get } from "firebase/database";
+import { ref, onValue, runTransaction, set } from "firebase/database";
 import { db } from "@/lib/firebase"; // your initialized Firebase app
 import chanters from "@/data/chanters.json";
 
@@ -21,9 +21,7 @@ export default function LiveCountPage() {
   const [chantingInProgress, setChantingInProgress] = useState(false);
   const [adminMessage, setAdminMessage] = useState("");
   const router = useRouter();
-  const intervalRef = useRef(null);
-  const BREAK_TIME = 45;
-  const POLL_MS = 2000;
+  const POLL_MS = 1000;
   const MASTER_UIDS = [
     "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
   ]
@@ -37,7 +35,7 @@ export default function LiveCountPage() {
 
   const [now, setNow] = useState(new Date());
   useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000);
+    const t = setInterval(() => setNow(new Date()), POLL_MS);
     return () => clearInterval(t);
   }, []);
 
@@ -97,7 +95,7 @@ export default function LiveCountPage() {
   }, [user]);
 
   function ekadashaElapsedTime() {
-    const diff = now - ekadashaStart;
+    const diff = Date.now() - ekadashaStart;
     const secs = Math.floor(diff / 1000);
     const hours = Math.floor((secs % (24 * 3600)) / 3600);
     const minutes = Math.floor((secs % 3600) / 60);
@@ -105,6 +103,15 @@ export default function LiveCountPage() {
     return { hours, minutes, seconds };
   }
   const et = ekadashaElapsedTime();
+
+  function rudraElapsedTime() {
+    const diff = Date.now() - rudraStart;
+    const secs = Math.floor(diff / 1000);
+    const minutes = Math.floor((secs % 3600) / 60);
+    const seconds = secs % 60;
+    return { minutes, seconds };
+  }
+  const rt = rudraElapsedTime();
 
   const joinRudra = async () => {
     if (joined) return;
@@ -124,16 +131,26 @@ export default function LiveCountPage() {
   }
 
   const startChanting = async () => {
-    if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) {
-      return;
-    }
+    /* TODO: fix race conditions */
+    if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) return;
+  
     const chantingRef = ref(db, "chanting");
+    const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
+    const rudraStartRef = ref(db, "timestamps/rudraStart");
     try {
-      await set(chantingRef, true);
+      const currTime = Date.now();
+      await runTransaction(chantingRef, (currentValue) => {  
+        if (!currentValue) {
+          currentValue = true;
+        }
+        return currentValue;
+      });
+      if (!ekadashaStart) await set(ekadashaStartRef, currTime);
+      await set(rudraStartRef, currTime);
     } catch (err) {
-      console.error("Failed to start/stop chanting", err);
+      console.error("Failed to start chanting", err);
     }
-  }
+  };
 
   const stopChanting = async () => {
     if (!MASTER_UIDS.includes(user.uid) || !chantingInProgress) {
@@ -142,14 +159,35 @@ export default function LiveCountPage() {
     const chantingRef = ref(db, "chanting");
     const rudraRef = ref(db, "counters/rudraCount");
     try {
-        await runTransaction(rudraRef, (currentValue) => {
-          return currentValue + chanterCount;
-        });
-        await set(chantingRef, true);
+      await runTransaction(chantingRef, (currentValue) => {
+        // Only stop if currently true
+        if (currentValue === true) {
+          // safely increment rudra inside the same transaction
+          runTransaction(rudraRef, (rudraCount) => {
+            return (rudraCount || 0) + chanterCount;
+          });
+          return false; // set chanting -> false
+        }
+        return currentValue; // no-op if already stopped
+      });
     } catch (err) {
-      console.error("Failed to start/stop chanting", err);
+      console.error("Failed to stop chanting", err);
     }
   }
+
+  const resetEkadasha = async () => {
+    /* TODO: fix race conditions */
+    if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) return;
+  
+    const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
+    const rudraStartRef = ref(db, "timestamps/rudraStart");
+    try {
+      await set(ekadashaStartRef, 0);
+      await set(rudraStartRef, 0);
+    } catch (err) {
+      console.error("Failed to start chanting", err);
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (!user) return null; // temporarily render nothing while redirecting
@@ -164,7 +202,7 @@ export default function LiveCountPage() {
         </header>
 
         <section className="bg-white rounded-lg shadow p-8 text-center">
-          <div className="text-sm text-slate-500">{chantingInProgress ? "Chanting Namaka" : "Chanting Chamaka"}</div>
+          <div className="text-sm text-slate-500">{!ekadashaStart ? "Ekadasha parayana not started" : chantingInProgress ? "Chanting Namaka" : "Chanting Chamaka"}</div>
 
           <div className="mt-6">
             <div className="inline-flex items-baseline gap-3">
@@ -193,7 +231,7 @@ export default function LiveCountPage() {
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{ekadashaStart ?  `${et.hours}:${et.minutes}:${et.seconds}` : "-"}</div>
+              <div className="text-2xl font-semibold">{ekadashaStart ?  `${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}` : "-"}</div>
               <div className="text-xs text-slate-500">Ekadasha Parayana Elapsed Time</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
@@ -201,7 +239,7 @@ export default function LiveCountPage() {
               <div className="text-xs text-slate-500">Rudras remaining</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{rudraCount ? "-" : "-"}</div>
+              <div className="text-2xl font-semibold">{rudraStart ? `${String(rt.minutes).padStart(2, "0")}:${String(rt.seconds).padStart(2, "0")}` : "-"}</div>
               <div className="text-xs text-slate-500">Current Rudra Elapsed Time</div>
             </div>
           </div>
@@ -222,6 +260,12 @@ export default function LiveCountPage() {
                 className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700"
               >
                 Stop Chanting
+              </button>
+              <button
+                onClick={resetEkadasha}
+                className="px-6 py-2 rounded-lg font-medium bg-red-600 text-white hover:bg-red-700"
+              >
+                Reset Ekadasha
               </button>
             </div>
           </section>) : <></>}

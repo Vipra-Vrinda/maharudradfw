@@ -41,12 +41,6 @@ export const logout = async (user) => {
   if (!user) return;
 
   try {
-    const snap = await get(ref(db, `sessions/${user.uid}/joined`));
-    const userChantingInProgress = snap.exists() ? snap.val() : false;
-    if (userChantingInProgress) {
-      alert("You cannot sign out while joined in an active session. Please get leave by a moderator and leave the live rudra before signing out.")
-      return;
-    }
     await signOut(auth);
   } catch (err) {
     console.error("Failed to log out:", err);

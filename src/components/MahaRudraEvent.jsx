@@ -83,14 +83,14 @@ export default function MahaRudraEvent({
             <a href="#testimonials" className="text-sm hover:underline">Testimonials</a>
             {(user != null) && (!loading) ? (
               <a
-                href="/livecount"
+                href="/maharudradfw/livecount"
                 className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
               >
                 Join Live Rudra
               </a>
             ) : (
               <a
-                href="/login"
+                href="/maharudradfw/login"
                 className="ml-2 inline-block rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
               >
                 Login
