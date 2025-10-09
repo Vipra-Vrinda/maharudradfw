@@ -47,7 +47,7 @@ export function useBroadcastListener() {
 }
 
 export default function MahaRudraEvent({
-  title = "Mahā Rudra DFW",
+  title = "Mahārudra Yajña",
   date = "October 10, 2025",
   endDate = "October 11, 2025",
   startTime = "11:30 AM",
@@ -191,7 +191,7 @@ export default function MahaRudraEvent({
 
             <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-bold">{title}</h2>
-              <p className="mt-2 text-slate-700">Join us for a sacred Mahā Rudra ceremony with registered Vipra Vrinda family members.</p>
+              <p className="mt-2 text-slate-700">Join us for a sacred Mahārudra Yajña with registered Vipra Vrinda family members.</p>
 
               <div className="mt-4 flex flex-wrap gap-3">
                 <div className="flex items-center gap-3">
@@ -229,11 +229,10 @@ export default function MahaRudraEvent({
           {/* Right column cards */}
           <aside className="space-y-4">
             <div className="rounded-lg bg-white p-4 shadow-sm">
-              <h3 className="font-semibold">Quick Info</h3>
+              <h3 className="font-semibold">Program Start Time</h3>
               <ul className="mt-2 text-sm text-slate-600 space-y-1">
-                <li><strong>Ganesh Pooja:</strong> Friday October 10, 11:30 AM</li>
-                <li><strong>Guru Vandane:</strong> Saturday October 11, 7:00 AM</li>
-                <li><strong>Contact:</strong> vipravrindadallas@gmail.com </li>
+                <li>Friday October 10 @ 11:30 AM</li>
+                <li>Saturday October 11 @ 7:00 AM</li>
               </ul>
             </div>
 
@@ -328,7 +327,7 @@ export default function MahaRudraEvent({
 
         {/* Footer */}
         <footer className="mt-12 py-8 text-center text-sm text-slate-500">
-          © {new Date().getFullYear()} {title} • Built with 𓉸𓆘 and devotion by the MahaRudra Religious Committee
+          © {new Date().getFullYear()} {title} • Built with 𓉸𓆘 and devotion by the Mahārudra Yajña Religious Committee
         </footer>
       </main>
     </div>

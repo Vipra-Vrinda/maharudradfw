@@ -1,12 +1,15 @@
 {
     "priests": [
-    { "name": "Vedabrahma Bhanuprakash Sharma", "role": "Head Priest" },
-    { "name": "Gopalkrishna Bhatt", "role": "Priest" },
-    { "name": "Vadi Bhatt", "role": "Priest" },
-    { "name": "Ravi Vardhan", "role": "Priest" },
+    { "name": "Vedabrahma Dr. Bhanuprakash Sharma", "role": "Head Priest" },
+    { "name": "Ravivardhan Narayana Bhattachar", "role": "Priest" },
+    { "name": "Gopalakrishna Bhat", "role": "Priest" },
+    { "name": "Srinivasa Nagarjuna", "role": "Priest" },
+    { "name": "Narasimhamurthy Garudadri", "role": "Priest" },
+    { "name": "Vadiraj Bhat", "role": "Priest" },
     { "name": "Subramanya Kashyap", "role": "Religious Committee Member" },
     { "name": "Nikhil Kashyap", "role": "Religious Committee Member" },
     { "name": "Ravi Balasubramanya", "role": "Religious Committee Member" },
+    { "name": "Sreenivas Ram", "role": "Religious Committee Member" },
     { "name": "Shailendra Upadhye", "role": "Religious Committee Member" },
     { "name": "Aaditya Murthy", "role": "Vipra Vrinda Youth Committee Leader" }
   ]
