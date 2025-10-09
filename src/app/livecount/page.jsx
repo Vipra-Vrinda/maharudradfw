@@ -233,7 +233,7 @@ export default function LiveCountPage() {
       <main className="max-w-4xl mx-auto">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold">Namaskara, {users[user.uid]}</h1>
-          <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications. Putting your device in airplane mode while keeping WiFi enabled will prolong battery life of your device.
+          <p className="mt-2 text-slate-600">For the best chanting experience, we recommend putting your phone on Do Not Disturb and turning off all notifications.
           </p>
           <p className="mt-2 text-slate-600">Closing this tab or even turning off your phone while "joined" in the live rudra will not disconnect you from the session.</p>
           <br style={{ marginBottom: 8 }} />
@@ -243,7 +243,7 @@ export default function LiveCountPage() {
             rel="noopener noreferrer"
             className="px-6 py-2 rounded-lg font-medium bg-amber-600 text-white hover:bg-amber-700 inline-block"
           >
-            View my Chanting Documents
+            View Chanting Documents
           </a>
         </header>
 
