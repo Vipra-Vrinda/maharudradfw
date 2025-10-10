@@ -16,6 +16,7 @@ export default function LiveCountPage() {
   const [chanterCountLoading, setChanterCountLoading] = useState(true);
   const [rudraCountLoading, setRudraCountLoading] = useState(true);
   const [ekadashaStart, setEkadashaStart] = useState(0);
+  const [chantingTime, setChantingTime] = useState(0);
   const [rudraStart, setRudraStart] = useState(0);
   const [rudraPrevDuration, setRudraPrevDuration] = useState(0);
   const [joined, setJoined] = useState(false);
@@ -52,6 +53,7 @@ export default function LiveCountPage() {
     const ekadashaRef = ref(db, "timestamps/ekadashaStart");
     const rudraTimeRef = ref(db, "timestamps/rudraStart");
     const rudraPrevDurationRef = ref(db, "previousRudraDuration");
+    const chantingTimeRef = ref(db, "chantingTime");
 
 
     // Listen for changes
@@ -71,6 +73,10 @@ export default function LiveCountPage() {
 
     const unsubscribeEkadasha = onValue(ekadashaRef, (snapshot) => {
       setEkadashaStart(snapshot.val() || 0);
+    });
+
+    const unsubscribeChantingTime = onValue(chantingTimeRef, (snapshot) => {
+      setChantingTime(snapshot.val() || 0);
     });
 
     const unsubscribeRudraStart = onValue(rudraTimeRef, (snapshot) => {
@@ -106,15 +112,21 @@ export default function LiveCountPage() {
     };
   }, [user]);
 
-  function ekadashaElapsedTime() {
-    const diff = Date.now() - ekadashaStart;
+  function elapsedTime() {
+    let diff = 0;
+    if (ekadashaStart) {
+      diff += Date.now() - ekadashaStart;
+    }
+    if (chantingTime) {
+      diff += chantingTime;
+    }
     const secs = Math.floor(diff / 1000);
     const hours = Math.floor((secs % (24 * 3600)) / 3600);
     const minutes = Math.floor((secs % 3600) / 60);
     const seconds = secs % 60;
     return { hours, minutes, seconds };
   }
-  const et = ekadashaElapsedTime();
+  const et = elapsedTime();
 
   function rudraElapsedTime() {
     const diff = Date.now() - rudraStart;
@@ -216,11 +228,20 @@ export default function LiveCountPage() {
     /* TODO: fix race conditions */
     if (!MASTER_UIDS.includes(user.uid) || chantingInProgress) return;
 
-    const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
-    const rudraStartRef = ref(db, "timestamps/rudraStart");
+    const parentRef = ref(db);
     try {
-      await set(ekadashaStartRef, 0);
-      await set(rudraStartRef, 0);
+      await runTransaction(parentRef, (root) => {
+        if (!root) {
+          return root;
+        }
+
+        if (!root.chanting && root.timestamps.ekadashaStart) {
+          root.chantingTime += Date.now() - root.timestamps.ekadashaStart;
+          root.timestamps.ekadashaStart = 0;
+          root.timestamps.rudraStart = 0;
+        }
+        return root;
+      })
     } catch (err) {
       console.error("Failed to start chanting", err);
     }
@@ -246,6 +267,20 @@ export default function LiveCountPage() {
             View Chanting Documents
           </a>
         </header>
+
+        <section className="bg-white bg-center rounded-lg shadow p-6">
+          <div className="mt-6 flex justify-center gap-2">
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{ekadashaStart || chantingTime ? `${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}` : "-"}</div>
+              <div className="text-xs text-slate-500">Total Chanting Time</div>
+            </div>
+            <div className="p-3 bg-amber-50 rounded text-center">
+              <div className="text-2xl font-semibold">{rudraStart ? `${String(rt.minutes).padStart(2, "0")}:${String(rt.seconds).padStart(2, "0")}` : "-"}</div>
+              <div className="text-xs text-slate-500">Current Rudra Elapsed Time</div>
+            </div>
+          </div>
+        </section>
+        <br style={{ marginBottom: 8 }} />
 
         <section className="bg-white rounded-lg shadow p-8 text-center">
           <div className="text-sm text-slate-500">{!ekadashaStart ? "Ekadasha parayana not started" : chantingInProgress ? "Chanting Namaka" : "Chanting Chamaka"}</div>
@@ -277,20 +312,12 @@ export default function LiveCountPage() {
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{ekadashaStart ? `${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}` : "-"}</div>
-              <div className="text-xs text-slate-500">Ekadasha Elapsed Time</div>
-            </div>
-            <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{1331 - rudraCount}</div>
               <div className="text-xs text-slate-500">Rudras remaining</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{rudraStart ? `${String(rt.minutes).padStart(2, "0")}:${String(rt.seconds).padStart(2, "0")}` : "-"}</div>
-              <div className="text-xs text-slate-500">Rudra Elapsed Time</div>
-            </div>
-            <div className="p-3 bg-amber-50 rounded text-center">
               <div className="text-2xl font-semibold">{rudraPrevDuration ? `${String(rd.minutes).padStart(2, "0")}:${String(rd.seconds).padStart(2, "0")}` : "-"}</div>
-              <div className="text-xs text-slate-500">Prev. Rudra Duration</div>
+              <div className="text-xs text-slate-500">Previous Rudra Duration</div>
             </div>
           </div>
         </section>
@@ -312,7 +339,11 @@ export default function LiveCountPage() {
                 Stop Chanting
               </button>
               <button
-                onClick={resetEkadasha}
+                onClick={() => {
+                  if (window.confirm("⚠️ Are you absolutely sure you want to reset this ekadasha?")) {
+                    resetEkadasha();
+                  }
+                }}
                 className="px-6 py-2 rounded-lg font-medium bg-red-600 text-white hover:bg-red-700"
               >
                 Reset Ekadasha

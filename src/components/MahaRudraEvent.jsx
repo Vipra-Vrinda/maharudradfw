@@ -80,6 +80,31 @@ export default function MahaRudraEvent({
   }, []);
   useBroadcastListener();
 
+  const [japaCount, setJapaCount] = useState(0);
+  useEffect(() => {
+    const fetchCount = () => {
+      fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT-GCf93D3maBXXSCzDzaXuGcBKupw0Scr2tbRQfnNAgbY-tFk2dN1m7sh-d_7o07NtCDo0o9NakYhL/pub?gid=0&single=true&output=csv")
+        .then((res) => res.text())
+        .then((csv) => {
+          const rows = csv.split("\n").map(r => r.split(","));
+          const d1 = rows[0][2]; // row 1 (0-based), col D (index 3)
+          if (d1) {
+            setJapaCount(Number(d1));
+          }
+        })
+        .catch((err) => console.error("Error fetching sheet:", err));
+    };
+
+    // initial fetch
+    fetchCount();
+
+    // auto-refresh every 30 seconds
+    const interval = setInterval(fetchCount, 60000);
+
+    // cleanup when component unmounts
+    return () => clearInterval(interval);
+  }, []);
+
   function countdownParts() {
     const diff = Math.max(0, eventDate - now);
     const secs = Math.floor(diff / 1000);
@@ -112,7 +137,7 @@ export default function MahaRudraEvent({
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#stream" className="text-sm hover:underline">Stream</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
-            <a href="#testimonials" className="text-sm hover:underline">Testimonials</a>
+            {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
             {(user != null) && (!loading) ? (
               <a
                 href="/maharudradfw/livecount"
@@ -152,17 +177,17 @@ export default function MahaRudraEvent({
               <a href="#about" className="text-sm hover:underline">About</a>
               <a href="#stream" className="text-sm hover:underline">Stream</a>
               <a href="#schedule" className="text-sm hover:underline">Schedule</a>
-              <a href="#testimonials" className="text-sm hover:underline">Testimonials</a>
+              {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
               {(user != null) && (!loading) ? (
                 <a
-                  href="/livecount"
+                  href="/maharudradfw/livecount"
                   className="inline-block self-start rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
                 >
                   Join Live Rudra
                 </a>
               ) : (
                 <a
-                  href="/login"
+                  href="/maharudradfw/login"
                   className="inline-block self-start rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
                 >
                   Login
@@ -278,7 +303,7 @@ export default function MahaRudraEvent({
                   <div className="text-xs text-slate-500">Rudras Chanted</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">100,518</div>
+                  <div className="text-2xl font-semibold">{japaCount}</div>
                   <div className="text-xs text-slate-500">Total Gayatri Japa Done</div>
                 </div>
               </div>
@@ -311,7 +336,7 @@ export default function MahaRudraEvent({
           </div>
         </section>
         <br style={{ marginBottom: 8 }} />
-        <section id="testimonials" className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* <section id="testimonials" className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <h2 className="text-xl font-semibold">Testimonials</h2>
           <br style={{ marginBottom: 8 }} />
           {testimonials.map((t, index) => (<div key={index} className={`rounded-lg bg-white p-6 shadow-md text-center
@@ -323,7 +348,7 @@ export default function MahaRudraEvent({
             <p className="italic text-gray-700">"{t.text}"</p>
             <p className="mt-2 text-sm text-slate-500 font-medium">— {t.name}, {t.role}</p>
           </div>))}
-        </section>
+        </section> */}
 
         {/* Footer */}
         <footer className="mt-12 py-8 text-center text-sm text-slate-500">
