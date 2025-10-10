@@ -52,8 +52,8 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900 p-6 flex items-center justify-center">
       <main className="w-full max-w-md">
         <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold">Sign in to MahaRudra</h1>
-          <p className="mt-2 text-slate-600 text-sm">Access your Mahā Rudra chanting experience to join live chanting.</p>
+          <h1 className="text-3xl font-bold">Sign in to Maharudra</h1>
+          <p className="mt-2 text-slate-600 text-sm">Access your Mahārudra chanting dashboard to join the live rudra session.</p>
         </header>
 
         <section className="bg-white rounded-lg shadow p-6">

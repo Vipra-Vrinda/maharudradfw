@@ -68,15 +68,38 @@ export default function MahaRudraEvent({
   }, []);
 
   const [rudraCount, setRudraCount] = useState(0);
+  const [chanterCount, setChanterCount] = useState(0);
+  const [ekadashaStart, setEkadashaStart] = useState(0);
+  const [chantingTime, setChantingTime] = useState(0);
   useEffect(() => {
     const rudraRef = ref(db, "counters/rudraCount");
+    const chanterCountRef = ref(db, "counters/chanterCount");
+    const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
+    const chantingTimeRef = ref(db, "chantingTime");
 
     // Listen for changes
     const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
       setRudraCount(snapshot.val() || 0);
     });
 
-    return () => unsubscribeRudra();
+    const unsubscribeChanters = onValue(chanterCountRef, (snapshot) => {
+      setChanterCount(snapshot.val() || 0);
+    });
+
+    const unsubscribeChantingTime = onValue(chantingTimeRef, (snapshot) => {
+      setChantingTime(snapshot.val() || 0);
+    });
+
+    const unsubscribeEkadasha = onValue(ekadashaStartRef, (snapshot) => {
+      setEkadashaStart(snapshot.val() || 0);
+    });
+
+    return () => {
+      unsubscribeRudra();
+      unsubscribeChanters();
+      unsubscribeChantingTime();
+      unsubscribeEkadasha();
+    }
   }, []);
   useBroadcastListener();
 
@@ -116,6 +139,22 @@ export default function MahaRudraEvent({
   }
 
   const cd = countdownParts();
+
+  function elapsedTime() {
+    let diff = 0;
+    if (ekadashaStart) {
+      diff += Date.now() - ekadashaStart;
+    }
+    if (chantingTime) {
+      diff += chantingTime;
+    }
+    const secs = Math.floor(diff / 1000);
+    const hours = Math.floor((secs % (24 * 3600)) / 3600);
+    const minutes = Math.floor((secs % 3600) / 60);
+    const seconds = secs % 60;
+    return { hours, minutes, seconds };
+  }
+  const et = elapsedTime();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -247,6 +286,14 @@ export default function MahaRudraEvent({
                   <div className="text-2xl font-semibold">{cd.seconds}</div>
                   <div className="text-xs text-slate-500">Seconds</div>
                 </div>
+                {eventDate - now <= 0 ? (<div className="flex items-center justify-center gap-2 mt-4">
+                  <div className="flex items-center">
+                    <span className="animate-pulse inline-flex rounded-full h-3 w-3 bg-red-500 opacity-80"></span>
+                    <span className="ml-2 text-sm font-semibold text-red-600 uppercase tracking-wide">
+                      Live
+                    </span>
+                  </div>
+                </div>) : <></>}
               </div>
             </div>
           </div>
@@ -304,7 +351,21 @@ export default function MahaRudraEvent({
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
                   <div className="text-2xl font-semibold">{japaCount}</div>
-                  <div className="text-xs text-slate-500">Total Gayatri Japa Done</div>
+                  <div className="text-xs text-slate-500">Gayatri Japa Completed</div>
+                </div>
+              </div>
+              <div className="mt-6 flex grid-cols-2 gap-2">
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">{chanterCount}</div>
+                  <div className="text-xs text-slate-500">Chanters</div>
+                </div>
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">{`${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}`}</div>
+                  <div className="text-xs text-slate-500">Total Chanting Time</div>
+                </div>
+                <div className="p-3 bg-amber-50 rounded text-center">
+                  <div className="text-2xl font-semibold">100+</div>
+                  <div className="text-xs text-slate-500">Registrants</div>
                 </div>
               </div>
             </div>

@@ -26,6 +26,7 @@ export default function LiveCountPage() {
   const POLL_MS = 1000;
   const MASTER_UIDS = [
     "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
+    "wsz3YafGkwcJXukbvUrNk5HaSoy2"
   ]
   const BROADCAST_UIDS = [
     "JXG9CSifc2gWRsfkzZInWRgV9fJ3",
