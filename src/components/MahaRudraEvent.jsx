@@ -331,7 +331,7 @@ export default function MahaRudraEvent({
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="stream">
           <div className="md:col-span-2">
             <div className="aspect-w-16 aspect-h-9">
-              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1963743737515521%2F&show_text=false&t=0"/>
+              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1318191373333961%2F&show_text=false&t=0"/>
             </div>
           </div>
 
