@@ -10,6 +10,7 @@ import schedule1 from "@/data/day1_schedule.json"
 import schedule2 from "@/data/day2_schedule.json"
 import pv from "@/data/priests_volunteers.json"
 import tls from "@/data/testimonials.json"
+import FacebookLiveEmbed from "@/components/FacebookLiveEmbed";
 
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
@@ -330,13 +331,7 @@ export default function MahaRudraEvent({
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="stream">
           <div className="md:col-span-2">
             <div className="aspect-w-16 aspect-h-9">
-              <iframe
-                title="livestream"
-                src={`https://www.youtube.com/embed/live_stream?channel=${youtubeChannelId}`}
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-96 rounded"
-              ></iframe>
+              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1963743737515521%2F&show_text=false&t=0"/>
             </div>
           </div>
 
