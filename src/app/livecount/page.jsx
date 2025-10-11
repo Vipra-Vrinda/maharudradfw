@@ -313,7 +313,7 @@ export default function LiveCountPage() {
               <div className="text-xs text-slate-500">Rudras Chanted</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
-              <div className="text-2xl font-semibold">{1331 - rudraCount}</div>
+              <div className="text-2xl font-semibold">{Math.max(0, 1331 - rudraCount)}</div>
               <div className="text-xs text-slate-500">Rudras remaining</div>
             </div>
             <div className="p-3 bg-amber-50 rounded text-center">
