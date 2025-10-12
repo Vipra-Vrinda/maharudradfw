@@ -360,7 +360,7 @@ export default function MahaRudraEvent({
                   <div className="text-xs text-slate-500">Total Chanting Time</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">100+</div>
+                  <div className="text-2xl font-semibold">150+</div>
                   <div className="text-xs text-slate-500">Registrants</div>
                 </div>
               </div>
