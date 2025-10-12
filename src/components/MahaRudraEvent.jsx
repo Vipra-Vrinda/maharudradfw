@@ -68,6 +68,13 @@ export default function MahaRudraEvent({
     return () => clearInterval(t);
   }, []);
 
+  const [isFirefox, setIsFirefox] = useState(false);
+  useEffect(() => {
+    if (typeof navigator !== 'undefined') {
+      setIsFirefox(navigator.userAgent.toLowerCase().includes('firefox'));
+    }
+  }, []);
+
   const [rudraCount, setRudraCount] = useState(0);
   const [chanterCount, setChanterCount] = useState(0);
   const [ekadashaStart, setEkadashaStart] = useState(0);
@@ -175,7 +182,8 @@ export default function MahaRudraEvent({
           </div>
           <nav className="hidden sm:flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
-            <a href="#stream" className="text-sm hover:underline">Stream</a>
+            <a href="#day1" className="text-sm hover:underline">Day 1</a>
+            <a href="#day2" className="text-sm hover:underline">Day 2</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
             {(user != null) && (!loading) ? (
@@ -270,31 +278,18 @@ export default function MahaRudraEvent({
               </div>
 
               {/* Countdown */}
-              <div className="mt-6 grid grid-cols-4 sm:grid-cols-8 gap-2">
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.days}</div>
-                  <div className="text-xs text-slate-500">Days</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.hours}</div>
-                  <div className="text-xs text-slate-500">Hours</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.minutes}</div>
-                  <div className="text-xs text-slate-500">Minutes</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{cd.seconds}</div>
-                  <div className="text-xs text-slate-500">Seconds</div>
-                </div>
-                {eventDate - now <= 0 ? (<div className="flex items-center justify-center gap-2 mt-4">
-                  <div className="flex items-center">
-                    <span className="animate-pulse inline-flex rounded-full h-3 w-3 bg-red-500 opacity-80"></span>
-                    <span className="ml-2 text-sm font-semibold text-red-600 uppercase tracking-wide">
-                      Live
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2 bg-amber-50 p-4 rounded-lg text-center shadow-sm">
+                <div className="col-span-full">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <span className="inline-flex rounded-full h-3 w-3 bg-green-500 opacity-80 animate-pulse"></span>
+                    <span className="text-sm font-semibold text-green-700 uppercase tracking-wide">
+                      MahaRudra 2025 Completed Successfully
                     </span>
                   </div>
-                </div>) : <></>}
+                  <div className="text-slate-700 text-sm">
+                    🙏 Heartfelt gratitude to all the priests, volunteers, chanters, and vipras who made this divine event a grand success.
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -327,11 +322,17 @@ export default function MahaRudraEvent({
         </section>
         <br style={{ marginBottom: 8 }} />
         {/* Stream embed */}
-        <h2 className="text-xl font-semibold">Live Stream</h2>
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="stream">
+        <h2 className="text-xl font-semibold">ಮೊದಲ ದಿನ (Day 1)</h2>
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="day1">
           <div className="md:col-span-2">
+            {isFirefox && (
+              <div className="bg-amber-100 border border-amber-300 text-amber-800 text-sm rounded-md p-3 mb-4 text-center">
+                ⚠️ If the Facebook video doesn't appear, please disable{' '}
+                <strong>Enhanced Tracking Protection</strong> for this site in Firefox.
+              </div>
+            )}
             <div className="aspect-w-16 aspect-h-9">
-              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1318191373333961%2F&show_text=false&t=0"/>
+              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1963743737515521%2F&show_text=false&t=0" />
             </div>
           </div>
 
@@ -351,7 +352,7 @@ export default function MahaRudraEvent({
               </div>
               <div className="mt-6 flex grid-cols-2 gap-2">
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{chanterCount}</div>
+                  <div className="text-2xl font-semibold">{chanterCount}+</div>
                   <div className="text-xs text-slate-500">Chanters</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
@@ -365,6 +366,20 @@ export default function MahaRudraEvent({
               </div>
             </div>
           </aside>
+        </section>
+        <h2 className="text-xl font-semibold">ಎರಡನೇ ದಿನ (Day 2)</h2>
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="day2">
+          <div className="md:col-span-2">
+            {isFirefox && (
+              <div className="bg-amber-100 border border-amber-300 text-amber-800 text-sm rounded-md p-3 mb-4 text-center">
+                ⚠️ If the Facebook video doesn't appear, please disable{' '}
+                <strong>Enhanced Tracking Protection</strong> for this site in Firefox.
+              </div>
+            )}
+            <div className="aspect-w-16 aspect-h-9">
+              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1318191373333961%2F&show_text=false&t=0" />
+            </div>
+          </div>
         </section>
 
         {/* Schedule */}
