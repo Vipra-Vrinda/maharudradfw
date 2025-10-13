@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useAuth } from "@/context/AuthContext";
 import { Menu, X } from "lucide-react";
-import { ref, onValue } from "firebase/database";
-import { db } from "@/lib/firebase"; // your initialized Firebase app
 import schedule1 from "@/data/day1_schedule.json"
 import schedule2 from "@/data/day2_schedule.json"
 import pv from "@/data/priests_volunteers.json"
@@ -15,37 +12,6 @@ import FacebookLiveEmbed from "@/components/FacebookLiveEmbed";
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
 // Usage: drop into a React app, ensure Tailwind is configured.
-
-export function useBroadcastListener() {
-  useEffect(() => {
-    const broadcastRef = ref(db, "broadcast");
-
-    const unsubscribe = onValue(broadcastRef, (snapshot) => {
-      if (!snapshot.exists()) return;
-      const data = snapshot.val();
-      if (!data.message || !data.timestamp) {
-        return;
-      }
-      // Show a browser notification
-
-      // check localStorage if already shown
-      const lastSeen = localStorage.getItem("lastBroadcastSeen");
-      if (lastSeen !== String(data.timestamp)) {
-        if ("Notification" in window && Notification.permission === "granted") {
-          new Notification("📢 Announcement", {
-            body: `${data.message}`,
-          });
-        } else {
-          // fallback if notifications are blocked
-          alert(`📢 ${data.message}`);
-        }
-        localStorage.setItem("lastBroadcastSeen", String(data.timestamp));
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-}
 
 export default function MahaRudraEvent({
   title = "Mahārudra Yajña",
@@ -61,12 +27,6 @@ export default function MahaRudraEvent({
   const { priests } = pv;
   const { testimonials } = tls;
   const eventDate = new Date(date + " " + startTime);
-  const { user, loading, logout } = useAuth();
-  const [now, setNow] = useState(new Date());
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
 
   const [isFirefox, setIsFirefox] = useState(false);
   useEffect(() => {
@@ -75,98 +35,8 @@ export default function MahaRudraEvent({
     }
   }, []);
 
-  const [rudraCount, setRudraCount] = useState(0);
-  const [chanterCount, setChanterCount] = useState(0);
-  const [ekadashaStart, setEkadashaStart] = useState(0);
-  const [chantingTime, setChantingTime] = useState(0);
-  useEffect(() => {
-    const rudraRef = ref(db, "counters/rudraCount");
-    const chanterCountRef = ref(db, "counters/chanterCount");
-    const ekadashaStartRef = ref(db, "timestamps/ekadashaStart");
-    const chantingTimeRef = ref(db, "chantingTime");
-
-    // Listen for changes
-    const unsubscribeRudra = onValue(rudraRef, (snapshot) => {
-      setRudraCount(snapshot.val() || 0);
-    });
-
-    const unsubscribeChanters = onValue(chanterCountRef, (snapshot) => {
-      setChanterCount(snapshot.val() || 0);
-    });
-
-    const unsubscribeChantingTime = onValue(chantingTimeRef, (snapshot) => {
-      setChantingTime(snapshot.val() || 0);
-    });
-
-    const unsubscribeEkadasha = onValue(ekadashaStartRef, (snapshot) => {
-      setEkadashaStart(snapshot.val() || 0);
-    });
-
-    return () => {
-      unsubscribeRudra();
-      unsubscribeChanters();
-      unsubscribeChantingTime();
-      unsubscribeEkadasha();
-    }
-  }, []);
-  useBroadcastListener();
-
-  const [japaCount, setJapaCount] = useState(0);
-  useEffect(() => {
-    const fetchCount = () => {
-      fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vT-GCf93D3maBXXSCzDzaXuGcBKupw0Scr2tbRQfnNAgbY-tFk2dN1m7sh-d_7o07NtCDo0o9NakYhL/pub?gid=0&single=true&output=csv")
-        .then((res) => res.text())
-        .then((csv) => {
-          const rows = csv.split("\n").map(r => r.split(","));
-          const d1 = rows[0][2]; // row 1 (0-based), col D (index 3)
-          if (d1) {
-            setJapaCount(Number(d1));
-          }
-        })
-        .catch((err) => console.error("Error fetching sheet:", err));
-    };
-
-    // initial fetch
-    fetchCount();
-
-    // auto-refresh every 30 seconds
-    const interval = setInterval(fetchCount, 60000);
-
-    // cleanup when component unmounts
-    return () => clearInterval(interval);
-  }, []);
-
-  function countdownParts() {
-    const diff = Math.max(0, eventDate - now);
-    const secs = Math.floor(diff / 1000);
-    const days = Math.floor(secs / (24 * 3600));
-    const hours = Math.floor((secs % (24 * 3600)) / 3600);
-    const minutes = Math.floor((secs % 3600) / 60);
-    const seconds = secs % 60;
-    return { days, hours, minutes, seconds };
-  }
-
-  const cd = countdownParts();
-
-  function elapsedTime() {
-    let diff = 0;
-    if (ekadashaStart) {
-      diff += Date.now() - ekadashaStart;
-    }
-    if (chantingTime) {
-      diff += chantingTime;
-    }
-    const secs = Math.floor(diff / 1000);
-    const hours = Math.floor((secs % (24 * 3600)) / 3600);
-    const minutes = Math.floor((secs % 3600) / 60);
-    const seconds = secs % 60;
-    return { hours, minutes, seconds };
-  }
-  const et = elapsedTime();
-
   const [menuOpen, setMenuOpen] = useState(false);
 
-  if (loading) return <p>Loading...</p>;
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white text-slate-900">
       <header className="bg-white/60 backdrop-blur-sm sticky top-0 z-40 shadow">
@@ -185,30 +55,14 @@ export default function MahaRudraEvent({
             <a href="#day1" className="text-sm hover:underline">Day 1</a>
             <a href="#day2" className="text-sm hover:underline">Day 2</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
+            <a href="/maharudradfw/digitalad" className="text-sm hover:underline">Sponsors</a>
             {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
-            {(user != null) && (!loading) ? (
-              <a
-                href="/maharudradfw/livecount"
-                className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
-              >
-                Join Live Rudra
-              </a>
-            ) : (
-              <a
-                href="/maharudradfw/login"
-                className="ml-2 inline-block rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
-              >
-                Login
-              </a>
-            )}
-            {(user != null) && (!loading) ? (
-              <a
-                className="text-sm hover:underline"
-                onClick={() => logout(user)}
-              >
-                Sign Out
-              </a>
-            ) : (<></>)}
+            <a
+              href="/maharudradfw/dashboard"
+              className="ml-2 inline-block rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
+            >
+              View Chanter's Dashboard
+            </a>
           </nav>
 
           <button
@@ -226,29 +80,12 @@ export default function MahaRudraEvent({
               <a href="#stream" className="text-sm hover:underline">Stream</a>
               <a href="#schedule" className="text-sm hover:underline">Schedule</a>
               {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
-              {(user != null) && (!loading) ? (
-                <a
-                  href="/maharudradfw/livecount"
-                  className="inline-block self-start rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
-                >
-                  Join Live Rudra
-                </a>
-              ) : (
-                <a
-                  href="/maharudradfw/login"
-                  className="inline-block self-start rounded-lg bg-slate-600 text-white px-4 py-2 text-sm font-medium"
-                >
-                  Login
-                </a>
-              )}
-              {(user != null) && (!loading) ? (
-                <a
-                  className="text-sm hover:underline"
-                  onClick={() => logout(user)}
-                >
-                  Sign Out
-                </a>
-              ) : (<></>)}
+              <a
+                href="/maharudradfw/dashboard"
+                className="inline-block self-start rounded-lg bg-amber-600 text-white px-4 py-2 text-sm font-medium"
+              >
+                View Chanter's Dashboard
+              </a>
             </nav>
           </div>
         )}
@@ -342,21 +179,21 @@ export default function MahaRudraEvent({
               <h3 className="font-semibold">Statistics</h3>
               <div className="mt-6 flex grid-cols-2 gap-2">
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{rudraCount}</div>
+                  <div className="text-2xl font-semibold">1496</div>
                   <div className="text-xs text-slate-500">Rudras Chanted</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{japaCount}</div>
+                  <div className="text-2xl font-semibold">112182</div>
                   <div className="text-xs text-slate-500">Gayatri Japa Completed</div>
                 </div>
               </div>
               <div className="mt-6 flex grid-cols-2 gap-2">
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{chanterCount}+</div>
+                  <div className="text-2xl font-semibold">40+</div>
                   <div className="text-xs text-slate-500">Chanters</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">{`${String(et.hours).padStart(2, "0")}:${String(et.minutes).padStart(2, "0")}:${String(et.seconds).padStart(2, "0")}`}</div>
+                  <div className="text-2xl font-semibold">5:53:40</div>
                   <div className="text-xs text-slate-500">Total Chanting Time</div>
                 </div>
                 <div className="p-3 bg-amber-50 rounded text-center">
