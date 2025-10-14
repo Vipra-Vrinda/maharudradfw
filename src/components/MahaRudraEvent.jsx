@@ -77,7 +77,8 @@ export default function MahaRudraEvent({
           <div className="sm:hidden bg-white/95 backdrop-blur-sm shadow-md">
             <nav className="flex flex-col gap-3 px-4 py-3">
               <a href="#about" className="text-sm hover:underline">About</a>
-              <a href="#stream" className="text-sm hover:underline">Stream</a>
+              <a href="#day1" className="text-sm hover:underline">Day 1</a>
+              <a href="#day2" className="text-sm hover:underline">Day 2</a>
               <a href="#schedule" className="text-sm hover:underline">Schedule</a>
               {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
               <a
