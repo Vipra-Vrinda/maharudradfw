@@ -205,6 +205,7 @@ export default function MahaRudraEvent({
             </div>
           </aside>
         </section>
+        <br style={{ marginBottom: 8 }} />
         <h2 className="text-xl font-semibold">ಎರಡನೇ ದಿನ (Day 2)</h2>
         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="day2">
           <div className="md:col-span-2">
