@@ -52,6 +52,7 @@ export default function MahaRudraEvent({
           </div>
           <nav className="hidden sm:flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
+            <a href="#highlights" className="text-sm hover:underline">Highlights</a>
             <a href="#day1" className="text-sm hover:underline">Day 1</a>
             <a href="#day2" className="text-sm hover:underline">Day 2</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
@@ -77,6 +78,7 @@ export default function MahaRudraEvent({
           <div className="sm:hidden bg-white/95 backdrop-blur-sm shadow-md">
             <nav className="flex flex-col gap-3 px-4 py-3">
               <a href="#about" className="text-sm hover:underline">About</a>
+              <a href="#highlights" className="text-sm hover:underline">Highlights</a>
               <a href="#day1" className="text-sm hover:underline">Day 1</a>
               <a href="#day2" className="text-sm hover:underline">Day 2</a>
               <a href="#schedule" className="text-sm hover:underline">Schedule</a>
@@ -157,6 +159,29 @@ export default function MahaRudraEvent({
               </ul>
             </div>
           </aside>
+        </section>
+        <br style={{ marginBottom: 8 }} />
+        <h2 className="text-xl font-semibold">Highlights</h2>
+        <br style={{ marginBottom: 8 }} />
+        <section
+          id="highlights"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center"
+        >
+          <div className="md:col-span-2">
+
+            <div className="w-full flex justify-center">
+              <div className="relative w-full md:w-191/192 pb-[56.25%] rounded-xl shadow-lg overflow-hidden">
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full"
+                  src="https://www.youtube.com/embed/I3mS61zMysU?si=rll4wMVk-0kQKv1n"
+                  title="YouTube video player"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
         </section>
         <br style={{ marginBottom: 8 }} />
         {/* Stream embed */}
