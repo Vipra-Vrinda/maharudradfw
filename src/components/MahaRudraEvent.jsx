@@ -7,7 +7,6 @@ import schedule1 from "@/data/day1_schedule.json"
 import schedule2 from "@/data/day2_schedule.json"
 import pv from "@/data/priests_volunteers.json"
 import tls from "@/data/testimonials.json"
-import FacebookLiveEmbed from "@/components/FacebookLiveEmbed";
 
 // MahaRudraEvent.jsx
 // Single-file React component (Tailwind CSS required in the host project)
@@ -53,8 +52,6 @@ export default function MahaRudraEvent({
           <nav className="hidden sm:flex items-center gap-3">
             <a href="#about" className="text-sm hover:underline">About</a>
             <a href="#highlights" className="text-sm hover:underline">Highlights</a>
-            <a href="#day1" className="text-sm hover:underline">Day 1</a>
-            <a href="#day2" className="text-sm hover:underline">Day 2</a>
             <a href="#schedule" className="text-sm hover:underline">Schedule</a>
             <a href="/maharudradfw/digitalad" className="text-sm hover:underline">Sponsors</a>
             {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
@@ -79,8 +76,6 @@ export default function MahaRudraEvent({
             <nav className="flex flex-col gap-3 px-4 py-3">
               <a href="#about" className="text-sm hover:underline">About</a>
               <a href="#highlights" className="text-sm hover:underline">Highlights</a>
-              <a href="#day1" className="text-sm hover:underline">Day 1</a>
-              <a href="#day2" className="text-sm hover:underline">Day 2</a>
               <a href="#schedule" className="text-sm hover:underline">Schedule</a>
               {/* <a href="#testimonials" className="text-sm hover:underline">Testimonials</a> */}
               <a
@@ -184,67 +179,6 @@ export default function MahaRudraEvent({
           </div>
         </section>
         <br style={{ marginBottom: 8 }} />
-        {/* Stream embed */}
-        <h2 className="text-xl font-semibold">ಮೊದಲ ದಿನ (Day 1)</h2>
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="day1">
-          <div className="md:col-span-2">
-            {isFirefox && (
-              <div className="bg-amber-100 border border-amber-300 text-amber-800 text-sm rounded-md p-3 mb-4 text-center">
-                ⚠️ If the Facebook video doesn't appear, please disable{' '}
-                <strong>Enhanced Tracking Protection</strong> for this site in Firefox.
-              </div>
-            )}
-            <div className="aspect-w-16 aspect-h-9">
-              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1963743737515521%2F&show_text=false&t=0" />
-            </div>
-          </div>
-
-          {/* Right column cards */}
-          <aside className="space-y-4">
-            <div className="rounded-lg bg-white p-4 shadow-sm">
-              <h3 className="font-semibold">Statistics</h3>
-              <div className="mt-6 flex grid-cols-2 gap-2">
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">1496</div>
-                  <div className="text-xs text-slate-500">Rudras Chanted</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">112182</div>
-                  <div className="text-xs text-slate-500">Gayatri Japa Completed</div>
-                </div>
-              </div>
-              <div className="mt-6 flex grid-cols-2 gap-2">
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">40+</div>
-                  <div className="text-xs text-slate-500">Chanters</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">5:53:40</div>
-                  <div className="text-xs text-slate-500">Total Chanting Time</div>
-                </div>
-                <div className="p-3 bg-amber-50 rounded text-center">
-                  <div className="text-2xl font-semibold">200+</div>
-                  <div className="text-xs text-slate-500">Registrants</div>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </section>
-        <br style={{ marginBottom: 8 }} />
-        <h2 className="text-xl font-semibold">ಎರಡನೇ ದಿನ (Day 2)</h2>
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center" id="day2">
-          <div className="md:col-span-2">
-            {isFirefox && (
-              <div className="bg-amber-100 border border-amber-300 text-amber-800 text-sm rounded-md p-3 mb-4 text-center">
-                ⚠️ If the Facebook video doesn't appear, please disable{' '}
-                <strong>Enhanced Tracking Protection</strong> for this site in Firefox.
-              </div>
-            )}
-            <div className="aspect-w-16 aspect-h-9">
-              <FacebookLiveEmbed embedUrl="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61570392465708%2Fvideos%2F1318191373333961%2F&show_text=false&t=0" />
-            </div>
-          </div>
-        </section>
 
         {/* Schedule */}
         <section id="schedule" className="mt-12">
